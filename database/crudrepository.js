@@ -84,7 +84,32 @@ const connectionFunctions = {
       }
     });
   },
-  findById: (id, callback) => {},
+  findById: (id) => {
+    return new Promise((resolve, reject) => {
+      // Check if connected to database (connection not null)
+      if (connection) {
+        // Find the given id from database
+        connection.query(
+          'SELECT * FROM todos WHERE id = ?',
+          [id],
+          (err, locs) => {
+            if (err) {
+              reject(err);
+            }
+            if (locs.length > 0) {
+              if (locs) {
+                resolve(JSON.parse(JSON.stringify(locs)));
+              }
+            } else {
+              reject(new Error('No such id.'));
+            }
+          }
+        );
+        // Reject if not connected to database
+      } else {
+        reject(new Error('Connect to database first!'));
+      }
+    });
+  },
 };
-
 module.exports = connectionFunctions;
