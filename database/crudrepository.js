@@ -59,7 +59,31 @@ const connectionFunctions = {
       }
     });
   },
-  deleteById: (id, callback) => {},
+  deleteById: (id) => {
+    return new Promise((resolve, reject) => {
+      // Check if connected to database (connection not null)
+      if (connection) {
+        // Delete the given id from database
+        connection.query(
+          'DELETE FROM todos WHERE id = ?',
+          [id],
+          (err, data) => {
+            if (err) {
+              reject(err);
+              // Check if affectedRows is 1 i.e. the id existed and was removed
+            } else if (data.affectedRows === 1) {
+              resolve('data');
+            } else {
+              reject(err);
+            }
+          }
+        );
+        // Reject if not connected to database
+      } else {
+        reject(new Error('Connect to database first!'));
+      }
+    });
+  },
   findById: (id, callback) => {},
 };
 

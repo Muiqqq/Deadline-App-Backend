@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
   } catch (err) {
     res.status(500).send(err);
   }
-  await database.close();
+  await database.close().then((res) => console.log(res));
 });
 
 router.post('/', async (req, res) => {
@@ -20,7 +20,18 @@ router.post('/', async (req, res) => {
   } catch (err) {
     res.status(400).send(err);
   }
-  await database.close();
+  await database.close().then((res) => console.log(res));
+});
+
+router.delete('/:urlId([1-9]+)', async (req, res) => {
+  await database.connect();
+  const urlId = Number(req.params.urlId);
+  try {
+    res.send(await database.deleteById(urlId));
+  } catch (err) {
+    res.status(404).json({ msg: `No todo with the id of ${urlId}` });
+  }
+  await database.close().then((res) => console.log(res));
 });
 
 module.exports = router;
