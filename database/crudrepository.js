@@ -7,6 +7,7 @@ let connection = null;
 
 const connectionFunctions = {
   connect: () => {
+    // Create connection pool
     connection = mysql.createPool(config);
     connection.on('acquire', function (connection) {
       console.log('Connection %d acquired', connection.threadId);
@@ -14,7 +15,6 @@ const connectionFunctions = {
   },
   close: () => {
     return new Promise((resolve, reject) => {
-      // Check if connected to database (connection not null)
       if (connection) {
         // End connection and inform the user that the connection has been closed
         connection.end();
@@ -27,7 +27,7 @@ const connectionFunctions = {
   },
   save: (todo) => {
     return new Promise((resolve, reject) => {
-      // Check if connected to database (connection not null)
+      // Get connection from connection pool
       connection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
         // Save to database
@@ -40,18 +40,21 @@ const connectionFunctions = {
             if (err) {
               reject(err);
             }
-            // Resolve and output the id of the new entry
+            // Resolve and inform the user that query was successful
             resolve(`Saved to database!`);
           }
         );
+        // Release connection after use
         connection.release();
       });
     });
   },
   findAll: () => {
     return new Promise((resolve, reject) => {
+      // Get connection from connection pool
       connection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
+        // Get all rows from table todos
         connection.query('SELECT * FROM todos', (err, data) => {
           if (err) {
             reject(err);
@@ -59,13 +62,14 @@ const connectionFunctions = {
             resolve(JSON.parse(JSON.stringify(data)));
           }
         });
+        // Release connection after use
         connection.release();
       });
     });
   },
   deleteById: (id) => {
     return new Promise((resolve, reject) => {
-      // Check if connected to database (connection not null)
+      // Get connection from connection pool
       connection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
         // Delete the given id from database
@@ -83,14 +87,14 @@ const connectionFunctions = {
             }
           }
         );
-        // Reject if not connected to database
+        // Release connection after use
         connection.release();
       });
     });
   },
   findById: (id) => {
     return new Promise((resolve, reject) => {
-      // Check if connected to database (connection not null)
+      // Get connection from connection pool
       connection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
         // Find the given id from database
@@ -110,7 +114,7 @@ const connectionFunctions = {
             }
           }
         );
-        // Reject if not connected to database
+        // Release connection after use
         connection.release();
       });
     });
