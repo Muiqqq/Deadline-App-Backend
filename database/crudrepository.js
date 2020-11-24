@@ -1,11 +1,16 @@
 const mysql = require('mysql');
 const config = require('./config.js');
 
+config.connectionLimit = 10;
+
 let connection = null;
 
 const connectionFunctions = {
   connect: () => {
-    connection = mysql.createConnection(config);
+    connection = mysql.createPool(config);
+    connection.on('acquire', function (connection) {
+      console.log('Connection %d acquired', connection.threadId);
+    });
   },
   close: () => {
     return new Promise((resolve, reject) => {
@@ -23,7 +28,8 @@ const connectionFunctions = {
   save: (todo) => {
     return new Promise((resolve, reject) => {
       // Check if connected to database (connection not null)
-      if (connection) {
+      connection.getConnection(function (err, connection) {
+        if (err) reject(new Error(err));
         // Save to database
         const queryString =
           'INSERT INTO todos(name, description, priority, listid) VALUES (?, ?, ?, ?)';
@@ -38,15 +44,14 @@ const connectionFunctions = {
             resolve(`Saved to database!`);
           }
         );
-        // Reject if not connected to database
-      } else {
-        reject(new Error('Connect to database first!'));
-      }
+        connection.release();
+      });
     });
   },
   findAll: () => {
     return new Promise((resolve, reject) => {
-      if (connection) {
+      connection.getConnection(function (err, connection) {
+        if (err) reject(new Error(err));
         connection.query('SELECT * FROM todos', (err, data) => {
           if (err) {
             reject(err);
@@ -54,15 +59,15 @@ const connectionFunctions = {
             resolve(JSON.parse(JSON.stringify(data)));
           }
         });
-      } else {
-        reject(new Error('Connect to database first.'));
-      }
+        connection.release();
+      });
     });
   },
   deleteById: (id) => {
     return new Promise((resolve, reject) => {
       // Check if connected to database (connection not null)
-      if (connection) {
+      connection.getConnection(function (err, connection) {
+        if (err) reject(new Error(err));
         // Delete the given id from database
         connection.query(
           'DELETE FROM todos WHERE id = ?',
@@ -79,15 +84,15 @@ const connectionFunctions = {
           }
         );
         // Reject if not connected to database
-      } else {
-        reject(new Error('Connect to database first!'));
-      }
+        connection.release();
+      });
     });
   },
   findById: (id) => {
     return new Promise((resolve, reject) => {
       // Check if connected to database (connection not null)
-      if (connection) {
+      connection.getConnection(function (err, connection) {
+        if (err) reject(new Error(err));
         // Find the given id from database
         connection.query(
           'SELECT * FROM todos WHERE id = ?',
@@ -106,9 +111,8 @@ const connectionFunctions = {
           }
         );
         // Reject if not connected to database
-      } else {
-        reject(new Error('Connect to database first!'));
-      }
+        connection.release();
+      });
     });
   },
 };
