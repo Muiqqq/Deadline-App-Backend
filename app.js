@@ -17,3 +17,5 @@ const server = app.listen(8080, async () => {
     server.close();
   }
 });
+
+// Add graceful exit
