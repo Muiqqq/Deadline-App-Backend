@@ -1,17 +1,26 @@
 const express = require('express');
-const todos = express.Router();
+const router = express.Router();
 const database = require('../database/crudrepository.js');
 
 // Get All
-todos.get('/', async (req, res) => {
+router.get('/', async (req, res) => {
   await database.connect();
   try {
     res.send(await database.findAll());
   } catch (err) {
     res.status(500).send(err);
   }
-
   await database.close();
 });
 
-module.exports = todos;
+router.post('/', async (req, res) => {
+  await database.connect();
+  try {
+    res.send(await database.save(req.body));
+  } catch (err) {
+    res.status(400).send(err);
+  }
+  await database.close();
+});
+
+module.exports = router;

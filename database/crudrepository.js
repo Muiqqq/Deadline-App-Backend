@@ -20,7 +20,30 @@ const connectionFunctions = {
       }
     });
   },
-  save: (location, callback) => {},
+  save: (todo) => {
+    return new Promise((resolve, reject) => {
+      // Check if connected to database (connection not null)
+      if (connection) {
+        // Save to database
+        const queryString =
+          'INSERT INTO todos(name, description, priority, listid) VALUES (?, ?, ?, ?)';
+        connection.query(
+          queryString,
+          [todo.name, todo.description, todo.priority, todo.listid],
+          (err, data) => {
+            if (err) {
+              reject(err);
+            }
+            // Resolve and output the id of the new entry
+            resolve(`Saved to database!`);
+          }
+        );
+        // Reject if not connected to database
+      } else {
+        reject(new Error('Connect to database first!'));
+      }
+    });
+  },
   findAll: () => {
     return new Promise((resolve, reject) => {
       if (connection) {
