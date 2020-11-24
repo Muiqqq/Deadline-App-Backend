@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
     "eslint": "node node_modules/eslint/bin/eslint *.js",
     "fix": "node node_modules/eslint/bin/eslint *.js --fix"
   },
