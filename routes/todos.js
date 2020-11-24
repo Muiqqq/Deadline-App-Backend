@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const database = require('../database/crudrepository.js');
 
-// Get All
+// GET ALL
 router.get('/', async (req, res) => {
   try {
     res.send(await database.findAll());
@@ -11,6 +11,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+// POST
 router.post('/', async (req, res) => {
   try {
     res.send(await database.save(req.body));
@@ -19,6 +20,7 @@ router.post('/', async (req, res) => {
   }
 });
 
+// DELETE
 // This regex needs to be fixed. Doesn't accept: 10.
 router.delete('/:urlId([1-9]+)', async (req, res) => {
   const urlId = Number(req.params.urlId);
@@ -29,6 +31,7 @@ router.delete('/:urlId([1-9]+)', async (req, res) => {
   }
 });
 
+// GET id
 router.get('/:urlId([1-9]+)', async (req, res) => {
   const urlId = Number(req.params.urlId);
   try {
