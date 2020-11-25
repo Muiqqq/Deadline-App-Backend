@@ -2,6 +2,20 @@ const express = require('express');
 const router = express.Router();
 const database = require('../database/crudrepository.js');
 
+const createTodoObjectFromRequest = (req) => {
+  const todo = {
+    date_created: req.body.date_created,
+    date_deadline: req.body.date_deadline,
+    name: req.body.name,
+    description: req.body.description,
+    is_done: +req.body.is_done,
+    priority: +req.body.priority,
+    listid: +req.body.listid,
+  };
+
+  return todo;
+};
+
 const getTodos = async (req, res, next) => {
   try {
     let result;
