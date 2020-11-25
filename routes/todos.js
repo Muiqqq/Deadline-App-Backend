@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
 
 // DELETE
 // This regex needs to be fixed. Doesn't accept: 10.
-router.delete('/:urlId([1-9]+)', async (req, res) => {
+router.delete('/:urlId([1-9]*)', async (req, res) => {
   const urlId = Number(req.params.urlId);
   try {
     res.send(await database.deleteById(urlId));
@@ -32,7 +32,7 @@ router.delete('/:urlId([1-9]+)', async (req, res) => {
 });
 
 // GET id
-router.get('/:urlId([1-9]+)', async (req, res) => {
+router.get('/:urlId([1-9]*)', async (req, res) => {
   const urlId = Number(req.params.urlId);
   try {
     res.send(await database.findById(urlId));
