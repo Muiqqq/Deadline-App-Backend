@@ -105,7 +105,7 @@ const connectionFunctions = {
               } else if (data.affectedRows === 1) {
                 resolve(`Todo deleted with id ${id}`);
               } else {
-                reject(err);
+                reject(new Error(`Error: Could not delete by id.`));
               }
             }
           );
@@ -138,7 +138,7 @@ const connectionFunctions = {
                   resolve(JSON.parse(JSON.stringify(data)));
                 }
               } else {
-                reject(err);
+                reject(new Error(`Not found with id: ${id}`));
               }
             }
           );
