@@ -61,7 +61,27 @@ const updateTodo = async (req, res, next) => {
   }
 };
 
-router.route('/todos/:id([1-9]*)?').get(getTodos).post(addTodo).put(updateTodo);
+const deleteTodo = async (req, res, next) => {
+  try {
+    const id = +req.params.id;
+    const result = await database.deleteById(id);
+
+    if (result) {
+      res.status(204).end();
+    } else {
+      res.status(404).end('Content not found.');
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+router
+  .route('/todos/:id([1-9]*)?')
+  .get(getTodos)
+  .post(addTodo)
+  .put(updateTodo)
+  .delete(deleteTodo);
 
 // // GET ALL
 // router.get('/', async (req, res) => {
