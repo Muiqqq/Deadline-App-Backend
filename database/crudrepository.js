@@ -101,13 +101,13 @@ const connectionFunctions = {
         connection.query(
           'SELECT * FROM todos WHERE id = ?',
           [id],
-          (err, locs) => {
+          (err, data) => {
             if (err) {
               reject(err);
             }
-            if (locs.length > 0) {
-              if (locs) {
-                resolve(JSON.parse(JSON.stringify(locs)));
+            if (data.length > 0) {
+              if (data) {
+                resolve(JSON.parse(JSON.stringify(data)));
               }
             } else {
               reject(new Error('No such id.'));
