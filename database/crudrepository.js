@@ -42,11 +42,12 @@ const connectionFunctions = {
         } else {
           // Save to database
           const queryString =
-            'INSERT INTO todos(date_created, name, description, priority, listid) VALUES (?, ?, ?, ?, ?)';
+            'INSERT INTO todos(date_created, date_deadline, name, description, priority, listid) VALUES (?, ?, ?, ?, ?, ?)';
           connection.query(
             queryString,
             [
               todo.date_created,
+              todo.date_deadline,
               todo.name,
               todo.description,
               todo.priority,
