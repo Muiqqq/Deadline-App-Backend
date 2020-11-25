@@ -18,4 +18,9 @@ const server = app.listen(8080, async () => {
   }
 });
 
-// Add graceful exit
+// Graceful exit
+process.on('SIGINT', function () {
+  console.log('Closing...');
+  database.close();
+  process.exit();
+});
