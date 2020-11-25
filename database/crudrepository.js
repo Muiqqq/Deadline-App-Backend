@@ -148,5 +148,37 @@ const connectionFunctions = {
       });
     });
   },
+  update: (todo) => {
+    return new Promise((resolve, reject) => {
+      connection.getConnection((err, connection) => {
+        if (err) {
+          reject(err);
+        } else {
+          connection.query(
+            'UPDATE todos SET date_created = ?, date_deadline = ?, name = ?, description = ?, priority = ?, is_done = ?, listid = ? WHERE id = ?',
+            [
+              todo.date_created,
+              todo.date_deadline,
+              todo.name,
+              todo.description,
+              todo.priority,
+              todo.is_done,
+              todo.listid,
+              todo.id,
+            ],
+            (err, data) => {
+              if (err) {
+                reject(err);
+              } else {
+                const result = { msg: 'Updated successfully.', content: todo };
+                resolve(result);
+              }
+            }
+          );
+        }
+        connection.release();
+      });
+    });
+  },
 };
 module.exports = connectionFunctions;
