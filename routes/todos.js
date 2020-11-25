@@ -35,15 +35,8 @@ const getTodos = async (req, res, next) => {
 
 const addTodo = async (req, res, next) => {
   try {
-    let todo = {
-      date_created: new Date(),
-      date_deadline: req.body.date_deadline,
-      name: req.body.name,
-      description: req.body.description,
-      priority: +req.body.priority,
-      listid: +req.body.listid,
-    };
-
+    let todo = createTodoObjectFromRequest(req);
+    todo.date_created = new Date();
     todo = await database.save(todo);
     res.status(201).send(todo);
   } catch (e) {
