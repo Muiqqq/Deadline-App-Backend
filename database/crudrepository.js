@@ -57,7 +57,8 @@ const connectionFunctions = {
                 reject(err);
               }
               // Resolve and inform the user that query was successful
-              resolve(`Saved to database!`);
+              const result = { msg: 'Added successfully.', content: todo };
+              resolve(result);
             }
           );
         }
