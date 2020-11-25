@@ -89,21 +89,27 @@ const connectionFunctions = {
       // Get connection from connection pool
       connection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
-        // Delete the given id from database
-        connection.query(
-          'DELETE FROM todos WHERE id = ?',
-          [id],
-          (err, data) => {
-            if (err) {
-              reject(err);
-              // Check if affectedRows is 1 i.e. the id existed and was removed
-            } else if (data.affectedRows === 1) {
-              resolve(`Todo deleted with id ${id}`);
-            } else {
-              reject(err);
+        // Validate input
+        const validation = validator.validate(id, schemas.idSchema);
+        if (validation.errors.length > 0) {
+          reject(validation.errors);
+        } else {
+          // Delete the given id from database
+          connection.query(
+            'DELETE FROM todos WHERE id = ?',
+            [id],
+            (err, data) => {
+              if (err) {
+                reject(err);
+                // Check if affectedRows is 1 i.e. the id existed and was removed
+              } else if (data.affectedRows === 1) {
+                resolve(`Todo deleted with id ${id}`);
+              } else {
+                reject(err);
+              }
             }
-          }
-        );
+          );
+        }
         // Release connection after use
         connection.release();
       });
@@ -114,23 +120,29 @@ const connectionFunctions = {
       // Get connection from connection pool
       connection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
-        // Find the given id from database
-        connection.query(
-          'SELECT * FROM todos WHERE id = ?',
-          [id],
-          (err, data) => {
-            if (err) {
-              reject(err);
-            }
-            if (data.length > 0) {
-              if (data) {
-                resolve(JSON.parse(JSON.stringify(data)));
+        // Validate input
+        const validation = validator.validate(id, schemas.idSchema);
+        if (validation.errors.length > 0) {
+          reject(validation.errors);
+        } else {
+          // Find the given id from database
+          connection.query(
+            'SELECT * FROM todos WHERE id = ?',
+            [id],
+            (err, data) => {
+              if (err) {
+                reject(err);
               }
-            } else {
-              reject(err);
+              if (data.length > 0) {
+                if (data) {
+                  resolve(JSON.parse(JSON.stringify(data)));
+                }
+              } else {
+                reject(err);
+              }
             }
-          }
-        );
+          );
+        }
         // Release connection after use
         connection.release();
       });
