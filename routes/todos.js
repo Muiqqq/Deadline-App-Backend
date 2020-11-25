@@ -19,7 +19,26 @@ const getTodos = async (req, res, next) => {
   }
 };
 
-router.route('/todos/:id([1-9]*)?').get(getTodos);
+const addTodo = async (req, res, next) => {
+  try {
+    let todo = {
+      date_created: new Date(),
+      date_deadline: req.body.date_deadline,
+      name: req.body.name,
+      description: req.body.description,
+      priority: +req.body.priority,
+      listid: +req.body.listid,
+    };
+
+    todo = await database.save(todo);
+    res.status(201).send(todo);
+  } catch (e) {
+    res.status(400).send(e);
+    next(e);
+  }
+};
+
+router.route('/todos/:id([1-9]*)?').get(getTodos).post(addTodo);
 
 // // GET ALL
 // router.get('/', async (req, res) => {
