@@ -13,6 +13,7 @@ const connectionFunctions = {
   connect: () => {
     // Create connection pool
     connection = mysql.createPool(config);
+    // For testing:
     connection.on('acquire', function (connection) {
       console.log('Connection %d acquired', connection.threadId);
     });
@@ -34,20 +35,26 @@ const connectionFunctions = {
       // Get connection from connection pool
       connection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
-        // Save to database
-        const queryString =
-          'INSERT INTO todos(name, description, priority, listid) VALUES (?, ?, ?, ?)';
-        connection.query(
-          queryString,
-          [todo.name, todo.description, todo.priority, todo.listid],
-          (err, data) => {
-            if (err) {
-              reject(err);
+        // Validate input
+        const validation = validator.validate(todo, schemas.saveSchema);
+        if (validation.errors.length > 0) {
+          reject(validation.errors);
+        } else {
+          // Save to database
+          const queryString =
+            'INSERT INTO todos(name, description, priority, listid) VALUES (?, ?, ?, ?)';
+          connection.query(
+            queryString,
+            [todo.name, todo.description, todo.priority, todo.listid],
+            (err, data) => {
+              if (err) {
+                reject(err);
+              }
+              // Resolve and inform the user that query was successful
+              resolve(`Saved to database!`);
             }
-            // Resolve and inform the user that query was successful
-            resolve(`Saved to database!`);
-          }
-        );
+          );
+        }
         // Release connection after use
         connection.release();
       });
