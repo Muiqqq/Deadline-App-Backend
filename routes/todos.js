@@ -2,6 +2,25 @@ const express = require('express');
 const router = express.Router();
 const database = require('../database/crudrepository.js');
 
+const getTodos = async (req, res, next) => {
+  try {
+    let result;
+    if (req.params.id) {
+      const id = +req.params.id;
+      result = await database.findById(id);
+      res.status(200).send(result);
+    } else {
+      result = await database.findAll();
+      res.status(200).send(result);
+    }
+  } catch (e) {
+    res.status(404).end('Content not found.');
+    next(e);
+  }
+};
+
+router.route('/todos/:id([1-9]*)?').get(getTodos);
+
 // // GET ALL
 // router.get('/', async (req, res) => {
 //   try {
