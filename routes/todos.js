@@ -57,7 +57,7 @@ const updateTodo = async (req, res, next) => {
     if (todo !== null) {
       res.status(200).send(todo);
     } else {
-      res.status(404).end();
+      res.status(404).end('Content not found');
     }
   } catch (e) {
     next(e);
