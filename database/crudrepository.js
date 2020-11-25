@@ -68,13 +68,18 @@ const connectionFunctions = {
       });
     });
   },
-  findAll: () => {
+  findAll: (context) => {
     return new Promise((resolve, reject) => {
       // Get connection from connection pool
       connection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
-        // Get all rows from table todos
-        connection.query('SELECT * FROM todos', (err, data) => {
+        const sql =
+          context.limit && context.offset
+            ? 'SELECT * FROM todos LIMIT ? OFFSET ?'
+            : 'SELECT * FROM todos';
+        // Get all rows from table todos, utilizes pagination if limit &
+        // offset are present.
+        connection.query(sql, [context.limit, context.offset], (err, data) => {
           if (err) {
             reject(err);
           } else {

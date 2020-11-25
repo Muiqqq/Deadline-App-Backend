@@ -25,7 +25,9 @@ const getTodos = async (req, res, next) => {
       result = await database.findById(id);
       res.status(200).send(result);
     } else {
-      result = await database.findAll();
+      const offset = +req.query.offset;
+      const limit = +req.query.limit;
+      result = await database.findAll({ offset, limit });
       res.status(200).send(result);
     }
   } catch (e) {
