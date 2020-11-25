@@ -1,5 +1,9 @@
 const mysql = require('mysql');
 const config = require('./config.js');
+const schemas = require('./schemas.js');
+
+const Validator = require('jsonschema').Validator;
+const validator = new Validator();
 
 config.connectionLimit = 10;
 
