@@ -81,7 +81,7 @@ const connectionFunctions = {
               reject(err);
               // Check if affectedRows is 1 i.e. the id existed and was removed
             } else if (data.affectedRows === 1) {
-              resolve('data');
+              resolve(`Todo deleted with id ${id}`);
             } else {
               reject(err);
             }
@@ -110,7 +110,7 @@ const connectionFunctions = {
                 resolve(JSON.parse(JSON.stringify(data)));
               }
             } else {
-              reject(new Error('No such id.'));
+              reject(err);
             }
           }
         );
