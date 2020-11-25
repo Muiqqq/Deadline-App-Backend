@@ -16,6 +16,7 @@ const createTodoObjectFromRequest = (req) => {
   return todo;
 };
 
+// GET ALL OR ONE
 const getTodos = async (req, res, next) => {
   try {
     let result;
@@ -33,6 +34,7 @@ const getTodos = async (req, res, next) => {
   }
 };
 
+// POST
 const addTodo = async (req, res, next) => {
   try {
     let todo = createTodoObjectFromRequest(req);
@@ -45,6 +47,7 @@ const addTodo = async (req, res, next) => {
   }
 };
 
+// PUT (UPDATE)
 const updateTodo = async (req, res, next) => {
   try {
     let todo = createTodoObjectFromRequest(req);
@@ -61,6 +64,7 @@ const updateTodo = async (req, res, next) => {
   }
 };
 
+// DELETE
 const deleteTodo = async (req, res, next) => {
   try {
     const id = +req.params.id;
