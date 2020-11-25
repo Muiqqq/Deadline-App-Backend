@@ -52,7 +52,23 @@ const addTodo = async (req, res, next) => {
   }
 };
 
-router.route('/todos/:id([1-9]*)?').get(getTodos).post(addTodo);
+const updateTodo = async (req, res, next) => {
+  try {
+    let todo = createTodoObjectFromRequest(req);
+    todo.id = +req.params.id;
+    todo = await database.update(todo);
+
+    if (todo !== null) {
+      res.status(200).send(todo);
+    } else {
+      res.status(404).end();
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+router.route('/todos/:id([1-9]*)?').get(getTodos).post(addTodo).put(updateTodo);
 
 // // GET ALL
 // router.get('/', async (req, res) => {
