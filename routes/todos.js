@@ -2,42 +2,129 @@ const express = require('express');
 const router = express.Router();
 const database = require('../database/crudrepository.js');
 
-// GET ALL
-router.get('/', async (req, res) => {
+const createTodoObjectFromRequest = (req) => {
+  const todo = {
+    date_created: req.body.date_created,
+    date_deadline: req.body.date_deadline,
+    name: req.body.name,
+    description: req.body.description,
+    is_done: +req.body.is_done,
+    priority: +req.body.priority,
+    listid: +req.body.listid,
+  };
+
+  return todo;
+};
+
+// GET ALL OR ONE
+const getTodos = async (req, res, next) => {
   try {
-    res.send(await database.findAll());
-  } catch (err) {
-    res.status(500).send(err);
+    let result;
+    if (req.params.id) {
+      const id = +req.params.id;
+      result = await database.findById(id);
+      res.status(200).send(result);
+    } else {
+      const offset = +req.query.offset;
+      const limit = +req.query.limit;
+      result = await database.findAll({ offset, limit });
+      res.status(200).send(result);
+    }
+  } catch (e) {
+    res.status(404).end('Content not found.');
+    next(e);
   }
-});
+};
 
 // POST
-router.post('/', async (req, res) => {
+const addTodo = async (req, res, next) => {
   try {
-    res.send(await database.save(req.body));
-  } catch (err) {
-    res.status(400).send(err);
+    let todo = createTodoObjectFromRequest(req);
+    todo.date_created = new Date();
+    todo = await database.save(todo);
+    res.status(201).send(todo);
+  } catch (e) {
+    res.status(400).send(e);
+    next(e);
   }
-});
+};
+
+// PUT (UPDATE)
+const updateTodo = async (req, res, next) => {
+  try {
+    let todo = createTodoObjectFromRequest(req);
+    todo.id = +req.params.id;
+    todo = await database.update(todo);
+
+    if (todo !== null) {
+      res.status(200).send(todo);
+    } else {
+      res.status(404).end('Content not found');
+    }
+  } catch (e) {
+    next(e);
+  }
+};
 
 // DELETE
-router.delete('/:urlId([1-9]*)', async (req, res) => {
-  const urlId = Number(req.params.urlId);
+const deleteTodo = async (req, res, next) => {
   try {
-    res.send(await database.deleteById(urlId));
-  } catch (err) {
-    res.status(404).json({ msg: `No todo with the id of ${urlId}` });
-  }
-});
+    const id = +req.params.id;
+    const result = await database.deleteById(id);
 
-// GET id
-router.get('/:urlId([1-9]*)', async (req, res) => {
-  const urlId = Number(req.params.urlId);
-  try {
-    res.send(await database.findById(urlId));
-  } catch (err) {
-    res.status(404).json({ msg: `No todo with the id of ${urlId}` });
+    if (result) {
+      res.status(204).end();
+    } else {
+      res.status(404).end('Content not found.');
+    }
+  } catch (e) {
+    next(e);
   }
-});
+};
+
+router
+  .route('/todos/:id([1-9]*)?')
+  .get(getTodos)
+  .post(addTodo)
+  .put(updateTodo)
+  .delete(deleteTodo);
+
+// // GET ALL
+// router.get('/', async (req, res) => {
+//   try {
+//     res.send(await database.findAll());
+//   } catch (err) {
+//     res.status(500).send(err);
+//   }
+// });
+
+// // POST
+// router.post('/', async (req, res) => {
+//   try {
+//     res.send(await database.save(req.body));
+//   } catch (err) {
+//     res.status(400).send(err);
+//   }
+// });
+
+// // DELETE
+// router.delete('/:urlId([1-9]*)', async (req, res) => {
+//   const urlId = Number(req.params.urlId);
+//   try {
+//     res.send(await database.deleteById(urlId));
+//   } catch (err) {
+//     res.status(404).json({ msg: `No todo with the id of ${urlId}` });
+//   }
+// });
+
+// // GET id
+// router.get('/:urlId([1-9]*)', async (req, res) => {
+//   const urlId = Number(req.params.urlId);
+//   try {
+//     res.send(await database.findById(urlId));
+//   } catch (err) {
+//     res.status(404).json({ msg: `No todo with the id of ${urlId}` });
+//   }
+// });
 
 module.exports = router;

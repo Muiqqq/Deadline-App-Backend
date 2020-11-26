@@ -22,5 +22,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# For local testing
+test.http
+
 # DB config, confidential
 config.js

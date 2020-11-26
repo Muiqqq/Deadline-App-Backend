@@ -42,11 +42,12 @@ const connectionFunctions = {
         } else {
           // Save to database
           const queryString =
-            'INSERT INTO todos(date_created, name, description, priority, listid) VALUES (?, ?, ?, ?, ?)';
+            'INSERT INTO todos(date_created, date_deadline, name, description, priority, listid) VALUES (?, ?, ?, ?, ?, ?)';
           connection.query(
             queryString,
             [
               todo.date_created,
+              todo.date_deadline,
               todo.name,
               todo.description,
               todo.priority,
@@ -57,7 +58,8 @@ const connectionFunctions = {
                 reject(err);
               }
               // Resolve and inform the user that query was successful
-              resolve(`Saved to database!`);
+              const result = { msg: 'Added successfully.', content: todo };
+              resolve(result);
             }
           );
         }
@@ -66,13 +68,18 @@ const connectionFunctions = {
       });
     });
   },
-  findAll: () => {
+  findAll: (context) => {
     return new Promise((resolve, reject) => {
       // Get connection from connection pool
       connection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
-        // Get all rows from table todos
-        connection.query('SELECT * FROM todos', (err, data) => {
+        const sql =
+          context.limit && context.offset
+            ? 'SELECT * FROM todos LIMIT ? OFFSET ?'
+            : 'SELECT * FROM todos';
+        // Get all rows from table todos, utilizes pagination if limit &
+        // offset are present.
+        connection.query(sql, [context.limit, context.offset], (err, data) => {
           if (err) {
             reject(err);
           } else {
@@ -105,7 +112,7 @@ const connectionFunctions = {
               } else if (data.affectedRows === 1) {
                 resolve(`Todo deleted with id ${id}`);
               } else {
-                reject(err);
+                reject(new Error(`Error: Could not delete by id.`));
               }
             }
           );
@@ -138,12 +145,44 @@ const connectionFunctions = {
                   resolve(JSON.parse(JSON.stringify(data)));
                 }
               } else {
-                reject(err);
+                reject(new Error(`Not found with id: ${id}`));
               }
             }
           );
         }
         // Release connection after use
+        connection.release();
+      });
+    });
+  },
+  update: (todo) => {
+    return new Promise((resolve, reject) => {
+      connection.getConnection((err, connection) => {
+        if (err) {
+          reject(err);
+        } else {
+          connection.query(
+            'UPDATE todos SET date_created = ?, date_deadline = ?, name = ?, description = ?, priority = ?, is_done = ?, listid = ? WHERE id = ?',
+            [
+              todo.date_created,
+              todo.date_deadline,
+              todo.name,
+              todo.description,
+              todo.priority,
+              todo.is_done,
+              todo.listid,
+              todo.id,
+            ],
+            (err, data) => {
+              if (err) {
+                reject(err);
+              } else {
+                const result = { msg: 'Updated successfully.', content: todo };
+                resolve(result);
+              }
+            }
+          );
+        }
         connection.release();
       });
     });
