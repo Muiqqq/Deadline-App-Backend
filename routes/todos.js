@@ -71,7 +71,6 @@ const updateTodo = async (req, res, next) => {
     const context = {};
     context.id = +req.params.id;
     context.todo = createTodoObjectFromRequest(req);
-    context.todo.date_created = req.body.date_created;
     context.todo.date_created = new Date();
     const result = await todos.update(context);
 
