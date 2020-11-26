@@ -5,6 +5,8 @@ const schemas = require('./schemas.js');
 const Validator = require('jsonschema').Validator;
 const validator = new Validator();
 
+const MAX_ROWS_SHOWN = 80;
+
 config.connectionLimit = 10;
 
 let connection = null;
@@ -73,13 +75,16 @@ const connectionFunctions = {
       // Get connection from connection pool
       connection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
-        const sql =
-          context.limit && context.offset
-            ? 'SELECT * FROM todos LIMIT ? OFFSET ?'
-            : 'SELECT * FROM todos';
+        let sql = 'SELECT * FROM todos LIMIT ?';
+        const limit = context.limit > 0 ? context.limit : MAX_ROWS_SHOWN;
+
+        if (context.offset) {
+          sql = sql.concat(' OFFSET ?');
+        }
+
         // Get all rows from table todos, utilizes pagination if limit &
         // offset are present.
-        connection.query(sql, [context.limit, context.offset], (err, data) => {
+        connection.query(sql, [limit, context.offset], (err, data) => {
           if (err) {
             reject(err);
           } else {
