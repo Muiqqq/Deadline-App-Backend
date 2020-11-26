@@ -73,39 +73,6 @@ const connectionFunctions = {
       });
     });
   },
-  findById: (id) => {
-    return new Promise((resolve, reject) => {
-      // Get connection from connection pool
-      dbConnection.getConnection(function (err, connection) {
-        if (err) reject(new Error(err));
-        // Validate input
-        const validation = validator.validate(id, schemas.idSchema);
-        if (validation.errors.length > 0) {
-          reject(validation.errors);
-        } else {
-          // Find the given id from database
-          connection.query(
-            'SELECT * FROM todos WHERE id = ?',
-            [id],
-            (err, data) => {
-              if (err) {
-                reject(err);
-              }
-              if (data.length > 0) {
-                if (data) {
-                  resolve(JSON.parse(JSON.stringify(data)));
-                }
-              } else {
-                reject(new Error(`Not found with id: ${id}`));
-              }
-            }
-          );
-        }
-        // Release connection after use
-        connection.release();
-      });
-    });
-  },
   update: (todo) => {
     return new Promise((resolve, reject) => {
       dbConnection.getConnection((err, connection) => {
