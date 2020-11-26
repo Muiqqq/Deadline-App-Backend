@@ -1,7 +1,9 @@
-const mysql = require('mysql');
+// const mysql = require('mysql');
 const config = require('./config.js');
 const schemas = require('./schemas.js');
+const dbConnection = require('./connection');
 
+// const connection = dbConnection.connection;
 const Validator = require('jsonschema').Validator;
 const validator = new Validator();
 
@@ -9,33 +11,33 @@ const MAX_ROWS_SHOWN = 80;
 
 config.connectionLimit = 10;
 
-let connection = null;
+// let connection = null;
 
 const connectionFunctions = {
-  connect: () => {
-    // Create connection pool
-    connection = mysql.createPool(config);
-    // For testing:
-    connection.on('acquire', function (connection) {
-      console.log('Connection %d acquired', connection.threadId);
-    });
-  },
-  close: () => {
-    return new Promise((resolve, reject) => {
-      if (connection) {
-        // End connection and inform the user that the connection has been closed
-        connection.end();
-        resolve('Connection closed.');
-      } else {
-        // Reject if not connected to database
-        reject(new Error('Connect to database first!'));
-      }
-    });
-  },
+  // connect: () => {
+  //   // Create connection pool
+  //   connection = mysql.createPool(config);
+  //   // For testing:
+  //   connection.on('acquire', function (connection) {
+  //     console.log('Connection %d acquired', connection.threadId);
+  //   });
+  // },
+  // close: () => {
+  //   return new Promise((resolve, reject) => {
+  //     if (connection) {
+  //       // End connection and inform the user that the connection has been closed
+  //       connection.end();
+  //       resolve('Connection closed.');
+  //     } else {
+  //       // Reject if not connected to database
+  //       reject(new Error('Connect to database first!'));
+  //     }
+  //   });
+  // },
   save: (todo) => {
     return new Promise((resolve, reject) => {
       // Get connection from connection pool
-      connection.getConnection(function (err, connection) {
+      dbConnection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
         // Validate input
         const validation = validator.validate(todo, schemas.saveSchema);
@@ -73,7 +75,7 @@ const connectionFunctions = {
   findAll: (context) => {
     return new Promise((resolve, reject) => {
       // Get connection from connection pool
-      connection.getConnection(function (err, connection) {
+      dbConnection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
         let sql = 'SELECT * FROM todos LIMIT ?';
         const limit = context.limit > 0 ? context.limit : MAX_ROWS_SHOWN;
@@ -99,7 +101,7 @@ const connectionFunctions = {
   deleteById: (id) => {
     return new Promise((resolve, reject) => {
       // Get connection from connection pool
-      connection.getConnection(function (err, connection) {
+      dbConnection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
         // Validate input
         const validation = validator.validate(id, schemas.idSchema);
@@ -130,7 +132,7 @@ const connectionFunctions = {
   findById: (id) => {
     return new Promise((resolve, reject) => {
       // Get connection from connection pool
-      connection.getConnection(function (err, connection) {
+      dbConnection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
         // Validate input
         const validation = validator.validate(id, schemas.idSchema);
@@ -162,7 +164,7 @@ const connectionFunctions = {
   },
   update: (todo) => {
     return new Promise((resolve, reject) => {
-      connection.getConnection((err, connection) => {
+      dbConnection.getConnection((err, connection) => {
         if (err) {
           reject(err);
         } else {
