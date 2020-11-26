@@ -10,44 +10,53 @@ const MAX_ROWS_SHOWN = 80;
 // connection.js instead of writing its functionality for every single
 // action, resulting code will be much cleaner
 const connectionFunctions = {
-  save: (todo) => {
-    return new Promise((resolve, reject) => {
-      // Get connection from connection pool
-      dbConnection.getConnection(function (err, connection) {
-        if (err) reject(new Error(err));
-        // Validate input
-        const validation = validator.validate(todo, schemas.saveSchema);
-        if (validation.errors.length > 0) {
-          reject(validation.errors);
-        } else {
-          // Save to database
-          const queryString =
-            'INSERT INTO todos(date_created, date_deadline, name, description, priority, listid) VALUES (?, ?, ?, ?, ?, ?)';
-          connection.query(
-            queryString,
-            [
-              todo.date_created,
-              todo.date_deadline,
-              todo.name,
-              todo.description,
-              todo.priority,
-              todo.listid,
-            ],
-            (err, data) => {
-              if (err) {
-                reject(err);
-              }
-              // Resolve and inform the user that query was successful
-              const result = { msg: 'Added successfully.', content: todo };
-              resolve(result);
-            }
-          );
-        }
-        // Release connection after use
-        connection.release();
-      });
-    });
+  // Add a new entry to db
+  save: async (context) => {
+    // Implement validation!!
+    const sql = 'INSERT INTO lists(name) VALUES (?)';
+    const placeholders = [context.name];
+
+    const result = await dbConnection.runQuery(sql, placeholders);
+    return result;
   },
+  // save: (todo) => {
+  //   return new Promise((resolve, reject) => {
+  //     // Get connection from connection pool
+  //     dbConnection.getConnection(function (err, connection) {
+  //       if (err) reject(new Error(err));
+  //       // Validate input
+  //       const validation = validator.validate(todo, schemas.saveSchema);
+  //       if (validation.errors.length > 0) {
+  //         reject(validation.errors);
+  //       } else {
+  //         // Save to database
+  //         const queryString =
+  //           'INSERT INTO todos(date_created, date_deadline, name, description, priority, listid) VALUES (?, ?, ?, ?, ?, ?)';
+  //         connection.query(
+  //           queryString,
+  //           [
+  //             todo.date_created,
+  //             todo.date_deadline,
+  //             todo.name,
+  //             todo.description,
+  //             todo.priority,
+  //             todo.listid,
+  //           ],
+  //           (err, data) => {
+  //             if (err) {
+  //               reject(err);
+  //             }
+  //             // Resolve and inform the user that query was successful
+  //             const result = { msg: 'Added successfully.', content: todo };
+  //             resolve(result);
+  //           }
+  //         );
+  //       }
+  //       // Release connection after use
+  //       connection.release();
+  //     });
+  //   });
+  // },
   // Find all or find one
   find: async (context) => {
     let sql = 'SELECT * FROM todos';
@@ -69,32 +78,6 @@ const connectionFunctions = {
     const result = await dbConnection.runQuery(sql, placeholders);
     return result;
   },
-  // findAll: (context) => {
-  //   return new Promise((resolve, reject) => {
-  //     // Get connection from connection pool
-  //     dbConnection.getConnection(function (err, connection) {
-  //       if (err) reject(new Error(err));
-  //       let sql = 'SELECT * FROM todos LIMIT ?';
-  //       const limit = context.limit > 0 ? context.limit : MAX_ROWS_SHOWN;
-
-  //       if (context.offset) {
-  //         sql = sql.concat(' OFFSET ?');
-  //       }
-
-  //       // Get all rows from table todos, utilizes pagination if limit &
-  //       // offset are present.
-  //       connection.query(sql, [limit, context.offset], (err, data) => {
-  //         if (err) {
-  //           reject(err);
-  //         } else {
-  //           resolve(JSON.parse(JSON.stringify(data)));
-  //         }
-  //       });
-  //       // Release connection after use
-  //       connection.release();
-  //     });
-  //   });
-  // },
   deleteById: (id) => {
     return new Promise((resolve, reject) => {
       // Get connection from connection pool

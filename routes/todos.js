@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const database = require('../database/todorepository.js');
+const todos = require('../database/todorepository.js');
 
 const createTodoObjectFromRequest = (req) => {
   const todo = {
@@ -19,19 +19,31 @@ const createTodoObjectFromRequest = (req) => {
 // GET ALL OR ONE
 const getTodos = async (req, res, next) => {
   try {
-    let result;
+    const context = {};
+
     if (req.params.id) {
-      const id = +req.params.id;
-      result = await database.find(id);
+      context.id = +req.params.id;
+    } else {
+      context.offset = +req.query.offset;
+      context.limit = +req.query.limit;
+    }
+
+    const result = await todos.find(context);
+
+    if (result.length > 0) {
       res.status(200).send(result);
     } else {
-      const offset = +req.query.offset;
-      const limit = +req.query.limit;
-      result = await database.find({ offset, limit });
-      res.status(200).send(result);
+      const payload = {
+        msg: context.id
+          ? `No entry found with id: ${context.id}`
+          : `No entries found.`,
+        content: { ...context },
+        data: result,
+      };
+
+      res.status(404).send(payload);
     }
   } catch (e) {
-    res.status(404).end('Content not found.');
     next(e);
   }
 };
