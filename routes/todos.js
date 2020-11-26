@@ -91,39 +91,7 @@ const updateTodo = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  // PUT (UPDATE)
-  // const updateTodo = async (req, res, next) => {
-  //   try {
-  //     let todo = createTodoObjectFromRequest(req);
-  //     todo.id = +req.params.id;
-  //     todo = await todos.update(todo);
-
-  //     if (todo !== null) {
-  //       res.status(200).send(todo);
-  //     } else {
-  //       res.status(404).end('Content not found');
-  //     }
-  //   } catch (e) {
-  //     next(e);
-  //   }
-  // };
 };
-
-// DELETE
-// const deleteTodo = async (req, res, next) => {
-//   try {
-//     const id = +req.params.id;
-//     const result = await todos.deleteById(id);
-
-//     if (result) {
-//       res.status(204).end();
-//     } else {
-//       res.status(404).end('Content not found.');
-//     }
-//   } catch (e) {
-//     next(e);
-//   }
-// };
 
 const deleteTodo = async (req, res, next) => {
   try {
@@ -152,41 +120,4 @@ router
   .put(updateTodo)
   .delete(deleteTodo);
 
-// // GET ALL
-// router.get('/', async (req, res) => {
-//   try {
-//     res.send(await database.findAll());
-//   } catch (err) {
-//     res.status(500).send(err);
-//   }
-// });
-
-// // POST
-// router.post('/', async (req, res) => {
-//   try {
-//     res.send(await database.save(req.body));
-//   } catch (err) {
-//     res.status(400).send(err);
-//   }
-// });
-
-// // DELETE
-// router.delete('/:urlId([1-9]*)', async (req, res) => {
-//   const urlId = Number(req.params.urlId);
-//   try {
-//     res.send(await database.deleteById(urlId));
-//   } catch (err) {
-//     res.status(404).json({ msg: `No todo with the id of ${urlId}` });
-//   }
-// });
-
-// // GET id
-// router.get('/:urlId([1-9]*)', async (req, res) => {
-//   const urlId = Number(req.params.urlId);
-//   try {
-//     res.send(await database.findById(urlId));
-//   } catch (err) {
-//     res.status(404).json({ msg: `No todo with the id of ${urlId}` });
-//   }
-// });
 module.exports = router;

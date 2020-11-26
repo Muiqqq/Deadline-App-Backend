@@ -6,9 +6,6 @@ const validator = new Validator();
 
 const MAX_ROWS_SHOWN = 80;
 
-// This whole thing should be refactored to use the runQuery function from
-// connection.js instead of writing its functionality for every single
-// action, resulting code will be much cleaner
 const connectionFunctions = {
   // Add a new entry to db
   save: async (context) => {
@@ -56,37 +53,5 @@ const connectionFunctions = {
     const result = await dbConnection.runQuery(sql, placeholders);
     return result;
   },
-  // update: (todo) => {
-  //   return new Promise((resolve, reject) => {
-  //     dbConnection.getConnection((err, connection) => {
-  //       if (err) {
-  //         reject(err);
-  //       } else {
-  //         connection.query(
-  //           'UPDATE todos SET date_created = ?, date_deadline = ?, name = ?, description = ?, priority = ?, is_done = ?, listid = ? WHERE id = ?',
-  //           [
-  //             todo.date_created,
-  //             todo.date_deadline,
-  //             todo.name,
-  //             todo.description,
-  //             todo.priority,
-  //             todo.is_done,
-  //             todo.listid,
-  //             todo.id,
-  //           ],
-  //           (err, data) => {
-  //             if (err) {
-  //               reject(err);
-  //             } else {
-  //               const result = { msg: 'Updated successfully.', content: todo };
-  //               resolve(result);
-  //             }
-  //           }
-  //         );
-  //       }
-  //       connection.release();
-  //     });
-  //   });
-  // },
 };
 module.exports = connectionFunctions;
