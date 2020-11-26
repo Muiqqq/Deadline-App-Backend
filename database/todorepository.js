@@ -48,32 +48,53 @@ const connectionFunctions = {
       });
     });
   },
-  findAll: (context) => {
-    return new Promise((resolve, reject) => {
-      // Get connection from connection pool
-      dbConnection.getConnection(function (err, connection) {
-        if (err) reject(new Error(err));
-        let sql = 'SELECT * FROM todos LIMIT ?';
-        const limit = context.limit > 0 ? context.limit : MAX_ROWS_SHOWN;
+  // Find all or find one
+  find: async (context) => {
+    let sql = 'SELECT * FROM todos';
+    let placeholders = [];
 
-        if (context.offset) {
-          sql = sql.concat(' OFFSET ?');
-        }
+    if (context.id > 0) {
+      sql = sql.concat(' WHERE id = ?');
+      placeholders = [context.id];
+    } else {
+      const limit = context.limit > 0 ? context.limit : MAX_ROWS_SHOWN;
+      sql = sql.concat(' LIMIT ?');
+      if (context.offset) {
+        sql = sql.concat(' OFFSET ?');
+      }
 
-        // Get all rows from table todos, utilizes pagination if limit &
-        // offset are present.
-        connection.query(sql, [limit, context.offset], (err, data) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(JSON.parse(JSON.stringify(data)));
-          }
-        });
-        // Release connection after use
-        connection.release();
-      });
-    });
+      placeholders = [limit, context.offset];
+    }
+
+    const result = await dbConnection.runQuery(sql, placeholders);
+    return result;
   },
+  // findAll: (context) => {
+  //   return new Promise((resolve, reject) => {
+  //     // Get connection from connection pool
+  //     dbConnection.getConnection(function (err, connection) {
+  //       if (err) reject(new Error(err));
+  //       let sql = 'SELECT * FROM todos LIMIT ?';
+  //       const limit = context.limit > 0 ? context.limit : MAX_ROWS_SHOWN;
+
+  //       if (context.offset) {
+  //         sql = sql.concat(' OFFSET ?');
+  //       }
+
+  //       // Get all rows from table todos, utilizes pagination if limit &
+  //       // offset are present.
+  //       connection.query(sql, [limit, context.offset], (err, data) => {
+  //         if (err) {
+  //           reject(err);
+  //         } else {
+  //           resolve(JSON.parse(JSON.stringify(data)));
+  //         }
+  //       });
+  //       // Release connection after use
+  //       connection.release();
+  //     });
+  //   });
+  // },
   deleteById: (id) => {
     return new Promise((resolve, reject) => {
       // Get connection from connection pool

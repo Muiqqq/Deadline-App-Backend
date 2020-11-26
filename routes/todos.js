@@ -22,12 +22,12 @@ const getTodos = async (req, res, next) => {
     let result;
     if (req.params.id) {
       const id = +req.params.id;
-      result = await database.findById(id);
+      result = await database.find(id);
       res.status(200).send(result);
     } else {
       const offset = +req.query.offset;
       const limit = +req.query.limit;
-      result = await database.findAll({ offset, limit });
+      result = await database.find({ offset, limit });
       res.status(200).send(result);
     }
   } catch (e) {
