@@ -67,6 +67,31 @@ const del = async (req, res, next) => {
   }
 };
 
-router.route('/lists/:id([1-9]*)?').get(get).post(post).delete(del);
+const put = async (req, res, next) => {
+  try {
+    const context = {};
+    context.id = +req.params.id;
+    context.name = req.body.name;
+    const result = await lists.update(context);
+
+    const payload = {
+      msg: '',
+      content: { ...context },
+      data: result,
+    };
+
+    if (result.affectedRows === 0) {
+      payload.msg = `No entry found with id: ${context.id}`;
+      res.status(404).send(payload);
+    } else {
+      payload.msg = `Entry with id: ${context.id} updated successfully.`;
+      res.status(200).send(payload);
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+router.route('/lists/:id([1-9]*)?').post(post).get(get).put(put).delete(del);
 
 module.exports = router;
