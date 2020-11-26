@@ -1,9 +1,7 @@
-// const mysql = require('mysql');
 const config = require('./config.js');
 const schemas = require('./schemas.js');
 const dbConnection = require('./connection');
 
-// const connection = dbConnection.connection;
 const Validator = require('jsonschema').Validator;
 const validator = new Validator();
 
@@ -11,29 +9,7 @@ const MAX_ROWS_SHOWN = 80;
 
 config.connectionLimit = 10;
 
-// let connection = null;
-
 const connectionFunctions = {
-  // connect: () => {
-  //   // Create connection pool
-  //   connection = mysql.createPool(config);
-  //   // For testing:
-  //   connection.on('acquire', function (connection) {
-  //     console.log('Connection %d acquired', connection.threadId);
-  //   });
-  // },
-  // close: () => {
-  //   return new Promise((resolve, reject) => {
-  //     if (connection) {
-  //       // End connection and inform the user that the connection has been closed
-  //       connection.end();
-  //       resolve('Connection closed.');
-  //     } else {
-  //       // Reject if not connected to database
-  //       reject(new Error('Connect to database first!'));
-  //     }
-  //   });
-  // },
   save: (todo) => {
     return new Promise((resolve, reject) => {
       // Get connection from connection pool
