@@ -42,6 +42,13 @@ const connectionFunctions = {
     const result = await dbConnection.runQuery(sql, placeholders);
     return result;
   },
+  update: async (context) => {
+    const sql = 'UPDATE lists SET name = ? WHERE id = ?';
+    const placeholders = [context.name, context.id];
+
+    const result = await dbConnection.runQuery(sql, placeholders);
+    return result;
+  },
 };
 
 module.exports = connectionFunctions;
