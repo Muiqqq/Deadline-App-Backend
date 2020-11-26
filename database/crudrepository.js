@@ -1,4 +1,3 @@
-const config = require('./config.js');
 const schemas = require('./schemas.js');
 const dbConnection = require('./connection');
 
@@ -6,8 +5,6 @@ const Validator = require('jsonschema').Validator;
 const validator = new Validator();
 
 const MAX_ROWS_SHOWN = 80;
-
-config.connectionLimit = 10;
 
 const connectionFunctions = {
   save: (todo) => {
