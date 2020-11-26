@@ -29,6 +29,21 @@ const dbConnectionFunctions = {
   getConnection: (cb) => {
     connection.getConnection(cb);
   },
+  runQuery: (sql, placeholders) => {
+    return new Promise((resolve, reject) => {
+      connection.getConnection((err, connection) => {
+        if (err) reject(new Error(err));
+        connection.query(sql, [...placeholders], (err, data) => {
+          if (err) {
+            reject(new Error(err));
+          } else {
+            resolve(data);
+          }
+        });
+        connection.release();
+      });
+    });
+  },
 };
 
 // module.exports.connection = connection;
