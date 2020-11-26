@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const lists = require('../database/listrepository');
 
+// GET
 const get = async (req, res, next) => {
   try {
     const context = {};
@@ -33,6 +34,7 @@ const get = async (req, res, next) => {
   }
 };
 
+// POST
 const post = async (req, res, next) => {
   try {
     const context = {};
@@ -49,6 +51,7 @@ const post = async (req, res, next) => {
   }
 };
 
+// DELETE
 const del = async (req, res, next) => {
   try {
     const context = {};
@@ -69,6 +72,7 @@ const del = async (req, res, next) => {
   }
 };
 
+// PUT
 const put = async (req, res, next) => {
   try {
     const context = {};

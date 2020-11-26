@@ -6,6 +6,9 @@ const validator = new Validator();
 
 const MAX_ROWS_SHOWN = 80;
 
+// This whole thing should be refactored to use the runQuery function from
+// connection.js instead of writing its functionality for every single
+// action, resulting code will be much cleaner
 const connectionFunctions = {
   save: (todo) => {
     return new Promise((resolve, reject) => {

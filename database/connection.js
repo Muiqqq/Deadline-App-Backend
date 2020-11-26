@@ -26,9 +26,11 @@ const dbConnectionFunctions = {
       }
     });
   },
+  // This function is only needed because todorepository has not been refactored yet
   getConnection: (cb) => {
     connection.getConnection(cb);
   },
+  // Extracted from the repositories to reduce code duplication.
   runQuery: (sql, placeholders) => {
     return new Promise((resolve, reject) => {
       connection.getConnection((err, connection) => {
@@ -46,5 +48,4 @@ const dbConnectionFunctions = {
   },
 };
 
-// module.exports.connection = connection;
 module.exports = dbConnectionFunctions;

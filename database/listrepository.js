@@ -6,7 +6,10 @@ const validator = new Validator();
 
 const MAX_ROWS_SHOWN = 80;
 
+// Queries are actually handled in connection.js, this is where they are
+// constructed.
 const connectionFunctions = {
+  // Find all or find one
   find: async (context) => {
     let sql = 'SELECT * FROM lists';
     let placeholders = [];
@@ -27,6 +30,7 @@ const connectionFunctions = {
     const result = await dbConnection.runQuery(sql, placeholders);
     return result;
   },
+  // Add a new entry to db
   save: async (context) => {
     // Implement validation!!
     const sql = 'INSERT INTO lists(name) VALUES (?)';
@@ -35,6 +39,7 @@ const connectionFunctions = {
     const result = await dbConnection.runQuery(sql, placeholders);
     return result;
   },
+  // Delete by id from db
   deleteById: async (context) => {
     const sql = 'DELETE FROM lists WHERE id = ?';
     const placeholders = [context.id];
@@ -42,6 +47,7 @@ const connectionFunctions = {
     const result = await dbConnection.runQuery(sql, placeholders);
     return result;
   },
+  // Update an existing entry in db
   update: async (context) => {
     const sql = 'UPDATE lists SET name = ? WHERE id = ?';
     const placeholders = [context.name, context.id];
