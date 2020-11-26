@@ -18,13 +18,15 @@ const get = async (req, res, next) => {
     if (result.length > 0) {
       res.status(200).send(result);
     } else {
-      res
-        .status(404)
-        .send(
-          context.id
-            ? `No entry found with id: ${context.id}`
-            : `No entries found.`
-        );
+      const payload = {
+        msg: context.id
+          ? `No entry found with id: ${context.id}`
+          : `No entries found.`,
+        content: { ...context },
+        data: result,
+      };
+
+      res.status(404).send(payload);
     }
   } catch (e) {
     next(e);
