@@ -36,7 +36,12 @@ const post = async (req, res, next) => {
     const context = {};
     context.name = req.body.name;
     const result = await lists.save(context);
-    res.status(201).send(result);
+    const payload = {
+      msg: 'Added to database successfully.',
+      content: { id: result.insertId, ...context },
+      data: result,
+    };
+    res.status(201).send(payload);
   } catch (e) {
     next(e);
   }
