@@ -83,15 +83,35 @@ const updateTodo = async (req, res, next) => {
 };
 
 // DELETE
+// const deleteTodo = async (req, res, next) => {
+//   try {
+//     const id = +req.params.id;
+//     const result = await todos.deleteById(id);
+
+//     if (result) {
+//       res.status(204).end();
+//     } else {
+//       res.status(404).end('Content not found.');
+//     }
+//   } catch (e) {
+//     next(e);
+//   }
+// };
+
 const deleteTodo = async (req, res, next) => {
   try {
-    const id = +req.params.id;
-    const result = await todos.deleteById(id);
-
-    if (result) {
-      res.status(204).end();
+    const context = {};
+    context.id = +req.params.id;
+    const result = await todos.deleteById(context);
+    if (result.affectedRows === 0) {
+      const payload = {
+        msg: `No entry found with id: ${context.id}`,
+        content: { ...context },
+        data: result,
+      };
+      res.status(404).send(payload);
     } else {
-      res.status(404).end('Content not found.');
+      res.status(204).end();
     }
   } catch (e) {
     next(e);

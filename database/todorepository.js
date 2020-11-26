@@ -42,37 +42,14 @@ const connectionFunctions = {
     const result = await dbConnection.runQuery(sql, placeholders);
     return result;
   },
-  deleteById: (id) => {
-    return new Promise((resolve, reject) => {
-      // Get connection from connection pool
-      dbConnection.getConnection(function (err, connection) {
-        if (err) reject(new Error(err));
-        // Validate input
-        const validation = validator.validate(id, schemas.idSchema);
-        if (validation.errors.length > 0) {
-          reject(validation.errors);
-        } else {
-          // Delete the given id from database
-          connection.query(
-            'DELETE FROM todos WHERE id = ?',
-            [id],
-            (err, data) => {
-              if (err) {
-                reject(err);
-                // Check if affectedRows is 1 i.e. the id existed and was removed
-              } else if (data.affectedRows === 1) {
-                resolve(`Todo deleted with id ${id}`);
-              } else {
-                reject(new Error(`Error: Could not delete by id.`));
-              }
-            }
-          );
-        }
-        // Release connection after use
-        connection.release();
-      });
-    });
+  deleteById: async (context) => {
+    const sql = 'DELETE FROM todos WHERE id = ?';
+    const placeholders = [context.id];
+
+    const result = await dbConnection.runQuery(sql, placeholders);
+    return result;
   },
+
   update: (todo) => {
     return new Promise((resolve, reject) => {
       dbConnection.getConnection((err, connection) => {
