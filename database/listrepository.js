@@ -31,6 +31,13 @@ const connectionFunctions = {
       throw new Error('Query returned no results.');
     }
   },
+  save: async (context) => {
+    const sql = 'INSERT INTO lists(name) VALUES (?)';
+    const placeholders = [context.name];
+
+    const result = await dbConnection.runQuery(sql, placeholders);
+    return result;
+  },
 };
 
 module.exports = connectionFunctions;
