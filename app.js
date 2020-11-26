@@ -1,17 +1,19 @@
-const database = require('./database/crudrepository.js');
-
+// const database = require('./database/crudrepository.js');
+const dbConnection = require('./database/connection');
 const express = require('express');
 const app = express();
 const todos = require('./routes/todos.js');
+const lists = require('./routes/lists');
 
 app.use(express.json());
 app.use('/api', todos);
+app.use('/api', lists);
 
 const server = app.listen(8080, async () => {
   try {
     // PROBLEM: this doesn't really try connecting to db...
     // if db server not running its "successful" in connecting
-    await database.connect();
+    await dbConnection.connect();
     console.log('Database connection successful');
     console.log(`Listening on port ${server.address().port}`);
   } catch (err) {
@@ -23,6 +25,6 @@ const server = app.listen(8080, async () => {
 // Graceful exit
 process.on('SIGINT', function () {
   console.log('Closing...');
-  database.close();
+  dbConnection.close();
   process.exit();
 });
