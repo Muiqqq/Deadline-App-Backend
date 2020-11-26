@@ -13,8 +13,9 @@ const connectionFunctions = {
   // Add a new entry to db
   save: async (context) => {
     // Implement validation!!
-    const sql = 'INSERT INTO lists(name) VALUES (?)';
-    const placeholders = [context.name];
+    console.log(context);
+    const sql = 'INSERT INTO todos SET ?';
+    const placeholders = [context];
 
     const result = await dbConnection.runQuery(sql, placeholders);
     return result;
