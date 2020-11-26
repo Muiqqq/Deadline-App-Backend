@@ -17,7 +17,7 @@ const createTodoObjectFromRequest = (req) => {
 };
 
 // GET ALL OR ONE
-const getTodos = async (req, res, next) => {
+const get = async (req, res, next) => {
   try {
     const context = {};
 
@@ -66,7 +66,7 @@ const post = async (req, res, next) => {
 };
 
 // NOTE: Figure out if edit warrants date_created change...
-const updateTodo = async (req, res, next) => {
+const put = async (req, res, next) => {
   try {
     const context = {};
     context.id = +req.params.id;
@@ -92,7 +92,7 @@ const updateTodo = async (req, res, next) => {
   }
 };
 
-const deleteTodo = async (req, res, next) => {
+const del = async (req, res, next) => {
   try {
     const context = {};
     context.id = +req.params.id;
@@ -112,11 +112,6 @@ const deleteTodo = async (req, res, next) => {
   }
 };
 
-router
-  .route('/todos/:id([1-9]*)?')
-  .get(getTodos)
-  .post(post)
-  .put(updateTodo)
-  .delete(deleteTodo);
+router.route('/todos/:id([1-9]*)?').get(get).post(post).put(put).delete(del);
 
 module.exports = router;
