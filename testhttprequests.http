@@ -1,0 +1,181 @@
+# GET todos
+# all
+
+GET http://localhost:8080/api/todos
+
+###
+# one
+
+GET http://localhost:8080/api/todos/1
+
+###
+# how about a non-existing one?
+
+GET http://localhost:8080/api/todos/999
+
+###
+# pagination!
+
+GET http://localhost:8080/api/todos?limit=5&offset=3
+
+###
+
+# POST todos
+# date_created is automatically generated
+# listid has to point to an existing list!
+
+# all fields
+
+POST http://localhost:8080/api/todos
+Content-Type: application/json
+
+{
+  "date_deadline": "2020-11-20",
+  "name": "This is a test task",
+  "description": "no description",
+  "priority": "1",
+  "is_done": "0",
+  "listid": "1"
+}
+
+###
+# only required fields
+# todo: remove priority from here when fixed
+
+POST http://localhost:8080/api/todos
+Content-Type: application/json
+
+{
+  "name": "This is another test task",
+  "priority": "1",
+  "listid": "2"
+}
+
+###
+# one that fails
+
+POST http://localhost:8080/api/todos
+Content-Type: application/json
+
+{
+  "date_deadline": "2020-11-21",
+  "name": null,
+  "description": "description",
+  "priority": "2",
+  "listid": "1"
+}
+
+###
+# another one just because
+
+POST http://localhost:8080/api/todos
+Content-Type: application/json
+
+{
+  "date_deadline": "2020-11-21",
+  "name": "Doesn't work",
+  "description": "description",
+  "priority": "2",
+  "listid": "100"
+}
+
+###
+
+# PUT todos
+# update an existing todo
+# all fields required!
+
+###
+# here's a quick GET to see how it looks
+# before update
+GET http://localhost:8080/api/todos/4
+
+###
+
+PUT http://localhost:8080/api/todos/4
+Content-Type: application/json
+
+{
+  "date_created": "2020-11-25",
+  "date_deadline": "2020-11-25",
+  "name": "Pest control",
+  "description": "Nothing to see here :)",
+  "priority": "2",
+  "is_done": "1",
+  "listid": "2"
+}
+
+###
+# this one shouldn't work
+
+PUT http://localhost:8080/api/todos/4
+Content-Type: application/json
+
+{
+  "date_deadline": "2020-11-25",
+  "name": "Pest control",
+  "description": "Nothing to see here :)",
+  "priority": "2",
+  "is_done": "1",
+  "listid": "2"
+}
+
+###
+
+# DELETE todos
+# by id
+
+DELETE http://localhost:8080/api/todos/1
+
+###
+# can't delete everything though
+
+DELETE http://localhost:8080/api/todos
+
+###
+
+# same but for lists
+
+# GET lists
+# all
+
+GET http://localhost:8080/api/lists
+
+###
+# one
+
+GET http://localhost:8080/api/lists/1
+
+###
+# POST lists
+
+POST http://localhost:8080/api/lists/
+Content-Type: application/json
+
+{
+  "name": "chores"
+}
+
+###
+# PUT lists
+# update an existing list
+
+PUT http://localhost:8080/api/lists/1
+Content-Type: application/json
+
+{
+  "name": "Pest control"
+}
+
+###
+# DELETE lists
+# by id
+
+DELETE http://localhost:8080/api/lists/1
+
+###
+# can't delete everything
+
+DELETE http://localhost:8080/api/lists
+
+###
