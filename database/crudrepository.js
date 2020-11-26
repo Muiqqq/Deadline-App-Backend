@@ -1,5 +1,9 @@
 const mysql = require('mysql');
 const config = require('./config.js');
+const schemas = require('./schemas.js');
+
+const Validator = require('jsonschema').Validator;
+const validator = new Validator();
 
 config.connectionLimit = 10;
 
@@ -9,6 +13,7 @@ const connectionFunctions = {
   connect: () => {
     // Create connection pool
     connection = mysql.createPool(config);
+    // For testing:
     connection.on('acquire', function (connection) {
       console.log('Connection %d acquired', connection.threadId);
     });
@@ -30,20 +35,32 @@ const connectionFunctions = {
       // Get connection from connection pool
       connection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
-        // Save to database
-        const queryString =
-          'INSERT INTO todos(name, description, priority, listid) VALUES (?, ?, ?, ?)';
-        connection.query(
-          queryString,
-          [todo.name, todo.description, todo.priority, todo.listid],
-          (err, data) => {
-            if (err) {
-              reject(err);
+        // Validate input
+        const validation = validator.validate(todo, schemas.saveSchema);
+        if (validation.errors.length > 0) {
+          reject(validation.errors);
+        } else {
+          // Save to database
+          const queryString =
+            'INSERT INTO todos(date_created, name, description, priority, listid) VALUES (?, ?, ?, ?, ?)';
+          connection.query(
+            queryString,
+            [
+              todo.date_created,
+              todo.name,
+              todo.description,
+              todo.priority,
+              todo.listid,
+            ],
+            (err, data) => {
+              if (err) {
+                reject(err);
+              }
+              // Resolve and inform the user that query was successful
+              resolve(`Saved to database!`);
             }
-            // Resolve and inform the user that query was successful
-            resolve(`Saved to database!`);
-          }
-        );
+          );
+        }
         // Release connection after use
         connection.release();
       });
@@ -72,21 +89,27 @@ const connectionFunctions = {
       // Get connection from connection pool
       connection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
-        // Delete the given id from database
-        connection.query(
-          'DELETE FROM todos WHERE id = ?',
-          [id],
-          (err, data) => {
-            if (err) {
-              reject(err);
-              // Check if affectedRows is 1 i.e. the id existed and was removed
-            } else if (data.affectedRows === 1) {
-              resolve(`Todo deleted with id ${id}`);
-            } else {
-              reject(err);
+        // Validate input
+        const validation = validator.validate(id, schemas.idSchema);
+        if (validation.errors.length > 0) {
+          reject(validation.errors);
+        } else {
+          // Delete the given id from database
+          connection.query(
+            'DELETE FROM todos WHERE id = ?',
+            [id],
+            (err, data) => {
+              if (err) {
+                reject(err);
+                // Check if affectedRows is 1 i.e. the id existed and was removed
+              } else if (data.affectedRows === 1) {
+                resolve(`Todo deleted with id ${id}`);
+              } else {
+                reject(err);
+              }
             }
-          }
-        );
+          );
+        }
         // Release connection after use
         connection.release();
       });
@@ -97,23 +120,29 @@ const connectionFunctions = {
       // Get connection from connection pool
       connection.getConnection(function (err, connection) {
         if (err) reject(new Error(err));
-        // Find the given id from database
-        connection.query(
-          'SELECT * FROM todos WHERE id = ?',
-          [id],
-          (err, data) => {
-            if (err) {
-              reject(err);
-            }
-            if (data.length > 0) {
-              if (data) {
-                resolve(JSON.parse(JSON.stringify(data)));
+        // Validate input
+        const validation = validator.validate(id, schemas.idSchema);
+        if (validation.errors.length > 0) {
+          reject(validation.errors);
+        } else {
+          // Find the given id from database
+          connection.query(
+            'SELECT * FROM todos WHERE id = ?',
+            [id],
+            (err, data) => {
+              if (err) {
+                reject(err);
               }
-            } else {
-              reject(err);
+              if (data.length > 0) {
+                if (data) {
+                  resolve(JSON.parse(JSON.stringify(data)));
+                }
+              } else {
+                reject(err);
+              }
             }
-          }
-        );
+          );
+        }
         // Release connection after use
         connection.release();
       });

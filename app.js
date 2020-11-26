@@ -9,6 +9,8 @@ app.use('/api', todos);
 
 const server = app.listen(8080, async () => {
   try {
+    // PROBLEM: this doesn't really try connecting to db...
+    // if db server not running its "successful" in connecting
     await database.connect();
     console.log('Database connection successful');
     console.log(`Listening on port ${server.address().port}`);
