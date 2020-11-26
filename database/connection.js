@@ -32,8 +32,6 @@ const dbConnectionFunctions = {
     return new Promise((resolve, reject) => {
       connection.getConnection((err, connection) => {
         if (err) reject(new Error(err));
-        console.log(...placeholders);
-        console.log(sql);
         connection.query(sql, [...placeholders], (err, data) => {
           if (err) {
             reject(new Error(err));
