@@ -3,9 +3,11 @@ const dbConnection = require('./database/connection');
 const express = require('express');
 const app = express();
 const todos = require('./routes/todos.js');
+const lists = require('./routes/lists');
 
 app.use(express.json());
 app.use('/api', todos);
+app.use('/api', lists);
 
 const server = app.listen(8080, async () => {
   try {
