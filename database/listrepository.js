@@ -35,6 +35,13 @@ const connectionFunctions = {
     const result = await dbConnection.runQuery(sql, placeholders);
     return result;
   },
+  deleteById: async (context) => {
+    const sql = 'DELETE FROM lists WHERE id = ?';
+    const placeholders = [context.id];
+
+    const result = await dbConnection.runQuery(sql, placeholders);
+    return result;
+  },
 };
 
 module.exports = connectionFunctions;
