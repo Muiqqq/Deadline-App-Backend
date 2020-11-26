@@ -70,7 +70,7 @@ const updateTodo = async (req, res, next) => {
   try {
     let todo = createTodoObjectFromRequest(req);
     todo.id = +req.params.id;
-    todo = await database.update(todo);
+    todo = await todos.update(todo);
 
     if (todo !== null) {
       res.status(200).send(todo);
@@ -86,7 +86,7 @@ const updateTodo = async (req, res, next) => {
 const deleteTodo = async (req, res, next) => {
   try {
     const id = +req.params.id;
-    const result = await database.deleteById(id);
+    const result = await todos.deleteById(id);
 
     if (result) {
       res.status(204).end();
