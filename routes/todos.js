@@ -65,6 +65,7 @@ const post = async (req, res, next) => {
   }
 };
 
+// PUT (UPDATE)
 // NOTE: Figure out if edit warrants date_created change...
 const put = async (req, res, next) => {
   try {
@@ -92,6 +93,7 @@ const put = async (req, res, next) => {
   }
 };
 
+// DELETE
 const del = async (req, res, next) => {
   try {
     const context = {};

@@ -39,6 +39,7 @@ const connectionFunctions = {
     const result = await dbConnection.runQuery(sql, placeholders);
     return result;
   },
+  // Delete todo by id
   deleteById: async (context) => {
     const sql = 'DELETE FROM todos WHERE id = ?';
     const placeholders = [context.id];
@@ -46,6 +47,7 @@ const connectionFunctions = {
     const result = await dbConnection.runQuery(sql, placeholders);
     return result;
   },
+  // Update todo by id
   update: async (context) => {
     const sql = 'UPDATE todos SET ? WHERE id = ?';
     const placeholders = [context.todo, context.id];
