@@ -6,7 +6,6 @@ config.connectionLimit = 10;
 let connection = null;
 
 const dbConnectionFunctions = {
-  // connection: connection,
   connect: () => {
     // Create connection pool
     connection = mysql.createPool(config);
