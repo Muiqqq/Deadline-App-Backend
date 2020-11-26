@@ -48,7 +48,8 @@ const getTodos = async (req, res, next) => {
   }
 };
 
-const addTodo = async (req, res, next) => {
+// POST
+const post = async (req, res, next) => {
   try {
     const todo = createTodoObjectFromRequest(req);
     todo.date_created = new Date();
@@ -63,19 +64,6 @@ const addTodo = async (req, res, next) => {
     next(e);
   }
 };
-
-// // POST
-// const vanha = async (req, res, next) => {
-//   try {
-//     let todo = createTodoObjectFromRequest(req);
-//     todo.date_created = new Date();
-//     todo = await database.save(todo);
-//     res.status(201).send(todo);
-//   } catch (e) {
-//     res.status(400).send(e);
-//     next(e);
-//   }
-// };
 
 // PUT (UPDATE)
 const updateTodo = async (req, res, next) => {
@@ -113,7 +101,7 @@ const deleteTodo = async (req, res, next) => {
 router
   .route('/todos/:id([1-9]*)?')
   .get(getTodos)
-  .post(addTodo)
+  .post(post)
   .put(updateTodo)
   .delete(deleteTodo);
 
