@@ -23,6 +23,17 @@ const get = async (req, res, next) => {
   }
 };
 
-router.route('/lists/:id([1-9]*)?').get(get);
+const post = async (req, res, next) => {
+  try {
+    const context = {};
+    context.name = req.body.name;
+    const result = await lists.save(context);
+    res.status(201).send(result);
+  } catch (e) {
+    next(e);
+  }
+};
+
+router.route('/lists/:id([1-9]*)?').get(get).post(post);
 
 module.exports = router;
