@@ -7,31 +7,29 @@ const validator = new Validator();
 const MAX_ROWS_SHOWN = 80;
 
 const connectionFunctions = {
-  findAll: (context) => {
-    return new Promise((resolve, reject) => {
-      // Get connection from connection pool
-      dbConnection.getConnection(function (err, connection) {
-        if (err) reject(new Error(err));
-        let sql = 'SELECT * FROM lists LIMIT ?';
-        const limit = context.limit > 0 ? context.limit : MAX_ROWS_SHOWN;
+  find: async (context) => {
+    let sql = 'SELECT * FROM lists';
+    let placeholders = [];
 
-        if (context.offset) {
-          sql = sql.concat(' OFFSET ?');
-        }
+    if (context.id > 0) {
+      sql = sql.concat(' WHERE id = ?');
+      placeholders = [context.id];
+    } else {
+      const limit = context.limit > 0 ? context.limit : MAX_ROWS_SHOWN;
 
-        // Get all rows from table todos, utilizes pagination if limit &
-        // offset are present.
-        connection.query(sql, [limit, context.offset], (err, data) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(JSON.parse(JSON.stringify(data)));
-          }
-        });
-        // Release connection after use
-        connection.release();
-      });
-    });
+      if (context.offset) {
+        sql = sql.concat(' OFFSET ?');
+      }
+
+      placeholders = [limit, context.offset];
+    }
+
+    const result = await dbConnection.runQuery(sql, placeholders);
+    if (result.length > 0) {
+      return result;
+    } else {
+      throw new Error('Query returned no results.');
+    }
   },
 };
 
