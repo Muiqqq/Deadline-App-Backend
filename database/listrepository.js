@@ -25,13 +25,10 @@ const connectionFunctions = {
     }
 
     const result = await dbConnection.runQuery(sql, placeholders);
-    if (result.length > 0) {
-      return result;
-    } else {
-      throw new Error('Query returned no results.');
-    }
+    return result;
   },
   save: async (context) => {
+    // Implement validation!!
     const sql = 'INSERT INTO lists(name) VALUES (?)';
     const placeholders = [context.name];
 
