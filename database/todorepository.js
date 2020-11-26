@@ -20,44 +20,7 @@ const connectionFunctions = {
     const result = await dbConnection.runQuery(sql, placeholders);
     return result;
   },
-  // save: (todo) => {
-  //   return new Promise((resolve, reject) => {
-  //     // Get connection from connection pool
-  //     dbConnection.getConnection(function (err, connection) {
-  //       if (err) reject(new Error(err));
-  //       // Validate input
-  //       const validation = validator.validate(todo, schemas.saveSchema);
-  //       if (validation.errors.length > 0) {
-  //         reject(validation.errors);
-  //       } else {
-  //         // Save to database
-  //         const queryString =
-  //           'INSERT INTO todos(date_created, date_deadline, name, description, priority, listid) VALUES (?, ?, ?, ?, ?, ?)';
-  //         connection.query(
-  //           queryString,
-  //           [
-  //             todo.date_created,
-  //             todo.date_deadline,
-  //             todo.name,
-  //             todo.description,
-  //             todo.priority,
-  //             todo.listid,
-  //           ],
-  //           (err, data) => {
-  //             if (err) {
-  //               reject(err);
-  //             }
-  //             // Resolve and inform the user that query was successful
-  //             const result = { msg: 'Added successfully.', content: todo };
-  //             resolve(result);
-  //           }
-  //         );
-  //       }
-  //       // Release connection after use
-  //       connection.release();
-  //     });
-  //   });
-  // },
+
   // Find all or find one
   find: async (context) => {
     let sql = 'SELECT * FROM todos';
