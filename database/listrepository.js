@@ -16,7 +16,7 @@ const connectionFunctions = {
       placeholders = [context.id];
     } else {
       const limit = context.limit > 0 ? context.limit : MAX_ROWS_SHOWN;
-
+      sql = sql.concat(' LIMIT ?');
       if (context.offset) {
         sql = sql.concat(' OFFSET ?');
       }
