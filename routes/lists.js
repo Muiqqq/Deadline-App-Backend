@@ -47,6 +47,26 @@ const post = async (req, res, next) => {
   }
 };
 
-router.route('/lists/:id([1-9]*)?').get(get).post(post);
+const del = async (req, res, next) => {
+  try {
+    const context = {};
+    context.id = +req.params.id;
+    const result = await lists.deleteById(context);
+    if (result.affectedRows === 0) {
+      const payload = {
+        msg: `No entry found with id: ${context.id}`,
+        content: { ...context },
+        data: result,
+      };
+      res.status(404).send(payload);
+    } else {
+      res.status(204).end();
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+router.route('/lists/:id([1-9]*)?').get(get).post(post).delete(del);
 
 module.exports = router;
