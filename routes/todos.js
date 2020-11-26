@@ -65,21 +65,48 @@ const post = async (req, res, next) => {
   }
 };
 
-// PUT (UPDATE)
+// NOTE: Figure out if edit warrants date_created change...
 const updateTodo = async (req, res, next) => {
   try {
-    let todo = createTodoObjectFromRequest(req);
-    todo.id = +req.params.id;
-    todo = await todos.update(todo);
+    const context = {};
+    context.id = +req.params.id;
+    context.todo = createTodoObjectFromRequest(req);
+    context.todo.date_created = req.body.date_created;
+    context.todo.date_created = new Date();
+    const result = await todos.update(context);
 
-    if (todo !== null) {
-      res.status(200).send(todo);
+    const payload = {
+      msg: '',
+      content: { ...context },
+      data: result,
+    };
+
+    if (result.affectedRows === 0) {
+      payload.msg = `No entry found with id: ${context.id}`;
+      res.status(404).send(payload);
     } else {
-      res.status(404).end('Content not found');
+      payload.msg = `Entry with id: ${context.id} updated successfully.`;
+      res.status(200).send(payload);
     }
   } catch (e) {
     next(e);
   }
+  // PUT (UPDATE)
+  // const updateTodo = async (req, res, next) => {
+  //   try {
+  //     let todo = createTodoObjectFromRequest(req);
+  //     todo.id = +req.params.id;
+  //     todo = await todos.update(todo);
+
+  //     if (todo !== null) {
+  //       res.status(200).send(todo);
+  //     } else {
+  //       res.status(404).end('Content not found');
+  //     }
+  //   } catch (e) {
+  //     next(e);
+  //   }
+  // };
 };
 
 // DELETE
@@ -162,5 +189,4 @@ router
 //     res.status(404).json({ msg: `No todo with the id of ${urlId}` });
 //   }
 // });
-
 module.exports = router;
