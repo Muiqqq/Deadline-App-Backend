@@ -5,18 +5,20 @@ const lists = require('../database/listrepository');
 const get = async (req, res, next) => {
   try {
     let result;
+    const context = {};
+
     if (req.params.id) {
-      const id = +req.params.id;
-      result = await lists.findById(id);
+      context.id = +req.params.id;
+      result = await lists.find(context);
       res.status(200).send(result);
     } else {
-      const offset = +req.query.offset;
-      const limit = +req.query.limit;
-      result = await lists.findAll({ offset, limit });
+      context.offset = +req.query.offset;
+      context.limit = +req.query.limit;
+      result = await lists.find(context);
       res.status(200).send(result);
     }
   } catch (e) {
-    res.status(404).end('Content not found.');
+    res.status(404).end(e.message);
     next(e);
   }
 };
