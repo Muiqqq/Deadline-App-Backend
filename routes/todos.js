@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const database = require('../database/crudrepository.js');
+const database = require('../database/todorepository.js');
 
 const createTodoObjectFromRequest = (req) => {
   const todo = {
