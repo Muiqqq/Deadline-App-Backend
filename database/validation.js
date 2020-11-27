@@ -5,6 +5,7 @@ const validator = new Validator();
 
 function validation(obj) {
   let validationErrors;
+  // Checking whether its is todo or list to be checked is a bit clunky
   const validation = obj.priority
     ? validator.validate(obj, schemas.todoSchema)
     : validator.validate(obj, schemas.listSchema);
