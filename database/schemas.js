@@ -7,6 +7,7 @@ MainObject.saveSchema = {
   properties: {
     name: {
       type: 'string',
+      required: true,
       minLength: 1,
       maxLength: 200,
     },
@@ -16,11 +17,13 @@ MainObject.saveSchema = {
     },
     priority: {
       type: 'number',
+      required: true,
       minimum: 1,
       maximum: 3,
     },
     listid: {
       type: 'number',
+      required: true,
       minimum: 0,
       maximum: 100,
     },
@@ -28,9 +31,14 @@ MainObject.saveSchema = {
 };
 
 MainObject.nameSchema = {
-  type: 'string',
-  minlength: 1,
-  maxlength: 3,
+  type: 'object',
+  properties: {
+    name: {
+      type: 'string',
+      minLength: 1,
+      maxLength: 4,
+    },
+  },
 };
 
 module.exports = MainObject;

@@ -5,7 +5,10 @@ const validator = new Validator();
 
 function validation(obj) {
   let validationErrors;
-  const validation = validator.validate(obj, schemas.saveSchema);
+  const validation = obj.priority
+    ? validator.validate(obj, schemas.saveSchema)
+    : validator.validate(obj, schemas.nameSchema);
+
   if (validation.errors.length > 0) {
     validationErrors = validation.errors;
   }
