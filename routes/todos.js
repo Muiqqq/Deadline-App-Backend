@@ -20,7 +20,6 @@ const createTodoObjectFromRequest = (req) => {
 const get = async (req, res, next) => {
   try {
     const context = {};
-
     if (req.params.id) {
       context.id = +req.params.id;
     } else {

@@ -7,17 +7,6 @@ const validator = new Validator();
 const MAX_ROWS_SHOWN = 80;
 
 const connectionFunctions = {
-  // Add a new entry to db
-  save: async (context) => {
-    // Implement validation!!
-    console.log(context);
-    const sql = 'INSERT INTO todos SET ?';
-    const placeholders = [context];
-
-    const result = await dbConnection.runQuery(sql, placeholders);
-    return result;
-  },
-
   // Find all or find one
   find: async (context) => {
     let sql = 'SELECT * FROM todos';
@@ -35,6 +24,16 @@ const connectionFunctions = {
 
       placeholders = [limit, context.offset];
     }
+
+    const result = await dbConnection.runQuery(sql, placeholders);
+    return result;
+  },
+  // Add a new entry to db
+  save: async (context) => {
+    // Implement validation!!
+    console.log(context);
+    const sql = 'INSERT INTO todos SET ?';
+    const placeholders = [context];
 
     const result = await dbConnection.runQuery(sql, placeholders);
     return result;
