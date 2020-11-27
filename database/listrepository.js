@@ -1,8 +1,5 @@
 const dbConnection = require('./connection');
-const schemas = require('./schemas');
-
-const Validator = require('jsonschema').Validator;
-const validator = new Validator();
+const validate = require('./validation');
 
 const MAX_ROWS_SHOWN = 80;
 
