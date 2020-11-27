@@ -1,14 +1,15 @@
 const MainObject = {};
 
-MainObject.saveSchema = {
+MainObject.todoSchema = {
   id: '/All',
   type: 'object',
 
   properties: {
     name: {
       type: 'string',
-      minlength: 1,
-      maxlength: 400,
+      required: true,
+      minLength: 1,
+      maxLength: 200,
     },
     description: {
       type: 'string',
@@ -16,20 +17,28 @@ MainObject.saveSchema = {
     },
     priority: {
       type: 'number',
+      required: true,
       minimum: 1,
       maximum: 3,
     },
     listid: {
       type: 'number',
+      required: true,
       minimum: 0,
       maximum: 100,
     },
   },
 };
 
-MainObject.idSchema = {
-  type: 'number',
-  minimum: 1,
+MainObject.listSchema = {
+  type: 'object',
+  properties: {
+    name: {
+      type: 'string',
+      minLength: 1,
+      maxLength: 40,
+    },
+  },
 };
 
 module.exports = MainObject;

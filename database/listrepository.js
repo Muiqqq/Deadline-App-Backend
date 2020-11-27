@@ -1,8 +1,5 @@
 const dbConnection = require('./connection');
-const schemas = require('./schemas');
-
-const Validator = require('jsonschema').Validator;
-const validator = new Validator();
+const validate = require('./validation');
 
 const MAX_ROWS_SHOWN = 80;
 
@@ -32,12 +29,16 @@ const connectionFunctions = {
   },
   // Add a new entry to db
   save: async (context) => {
-    // Implement validation!!
-    const sql = 'INSERT INTO lists(name) VALUES (?)';
-    const placeholders = [context.name];
+    const validationResult = validate(context);
+    if (!validationResult > 0) {
+      const sql = 'INSERT INTO lists(name) VALUES (?)';
+      const placeholders = [context.name];
 
-    const result = await dbConnection.runQuery(sql, placeholders);
-    return result;
+      const result = await dbConnection.runQuery(sql, placeholders);
+      return result;
+    } else {
+      return validationResult[0];
+    }
   },
   // Delete by id from db
   deleteById: async (context) => {

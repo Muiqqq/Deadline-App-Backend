@@ -54,8 +54,12 @@ const post = async (req, res, next) => {
     todo.date_created = new Date();
     const result = await todos.save(todo);
     const payload = {
-      msg: 'Added to database successfully.',
-      content: { id: result.insertId, ...todo },
+      msg: result.insertId
+        ? 'Added to database successfully'
+        : 'Validation errors. Could not add to database.',
+      content: result.insertId
+        ? { id: result.insertId, ...todo }
+        : { error: result.ValidationError, ...todo },
       data: result,
     };
     res.status(201).send(payload);
