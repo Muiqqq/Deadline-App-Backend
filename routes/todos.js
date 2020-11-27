@@ -31,9 +31,12 @@ const get = async (req, res, next) => {
     if (req.params.id) {
       context.id = +req.params.id;
     } else {
+      console.log('e');
       context.offset = +req.query.offset;
       context.limit = +req.query.limit;
+      context.sort = req.query.sort;
     }
+    console.log(context);
 
     const result = await todos.find(context);
 
