@@ -26,10 +26,7 @@ const dbConnectionFunctions = {
       }
     });
   },
-  // This function is only needed because todorepository has not been refactored yet
-  getConnection: (cb) => {
-    connection.getConnection(cb);
-  },
+
   // Extracted from the repositories to reduce code duplication.
   runQuery: (sql, placeholders) => {
     return new Promise((resolve, reject) => {

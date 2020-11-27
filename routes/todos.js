@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const database = require('../database/todorepository.js');
+const todos = require('../database/todorepository.js');
 
 const createTodoObjectFromRequest = (req) => {
   const todo = {
@@ -8,7 +8,7 @@ const createTodoObjectFromRequest = (req) => {
     date_deadline: req.body.date_deadline,
     name: req.body.name,
     description: req.body.description,
-    is_done: +req.body.is_done,
+    is_done: false,
     priority: +req.body.priority,
     listid: +req.body.listid,
   };
@@ -17,49 +17,75 @@ const createTodoObjectFromRequest = (req) => {
 };
 
 // GET ALL OR ONE
-const getTodos = async (req, res, next) => {
+const get = async (req, res, next) => {
   try {
-    let result;
+    const context = {};
     if (req.params.id) {
-      const id = +req.params.id;
-      result = await database.findById(id);
+      context.id = +req.params.id;
+    } else {
+      context.offset = +req.query.offset;
+      context.limit = +req.query.limit;
+    }
+
+    const result = await todos.find(context);
+
+    if (result.length > 0) {
       res.status(200).send(result);
     } else {
-      const offset = +req.query.offset;
-      const limit = +req.query.limit;
-      result = await database.findAll({ offset, limit });
-      res.status(200).send(result);
+      const payload = {
+        msg: context.id
+          ? `No entry found with id: ${context.id}`
+          : `No entries found.`,
+        content: { ...context },
+        data: result,
+      };
+
+      res.status(404).send(payload);
     }
   } catch (e) {
-    res.status(404).end('Content not found.');
     next(e);
   }
 };
 
 // POST
-const addTodo = async (req, res, next) => {
+const post = async (req, res, next) => {
   try {
-    let todo = createTodoObjectFromRequest(req);
+    const todo = createTodoObjectFromRequest(req);
     todo.date_created = new Date();
-    todo = await database.save(todo);
-    res.status(201).send(todo);
+    const result = await todos.save(todo);
+    const payload = {
+      msg: 'Added to database successfully.',
+      content: { id: result.insertId, ...todo },
+      data: result,
+    };
+    res.status(201).send(payload);
   } catch (e) {
-    res.status(400).send(e);
     next(e);
   }
 };
 
 // PUT (UPDATE)
-const updateTodo = async (req, res, next) => {
+// NOTE: Figure out if edit warrants date_created change...
+const put = async (req, res, next) => {
   try {
-    let todo = createTodoObjectFromRequest(req);
-    todo.id = +req.params.id;
-    todo = await database.update(todo);
+    const context = {};
+    context.id = +req.params.id;
+    context.todo = createTodoObjectFromRequest(req);
+    context.todo.date_created = new Date();
+    const result = await todos.update(context);
 
-    if (todo !== null) {
-      res.status(200).send(todo);
+    const payload = {
+      msg: '',
+      content: { ...context },
+      data: result,
+    };
+
+    if (result.affectedRows === 0) {
+      payload.msg = `No entry found with id: ${context.id}`;
+      res.status(404).send(payload);
     } else {
-      res.status(404).end('Content not found');
+      payload.msg = `Entry with id: ${context.id} updated successfully.`;
+      res.status(200).send(payload);
     }
   } catch (e) {
     next(e);
@@ -67,64 +93,26 @@ const updateTodo = async (req, res, next) => {
 };
 
 // DELETE
-const deleteTodo = async (req, res, next) => {
+const del = async (req, res, next) => {
   try {
-    const id = +req.params.id;
-    const result = await database.deleteById(id);
-
-    if (result) {
-      res.status(204).end();
+    const context = {};
+    context.id = +req.params.id;
+    const result = await todos.deleteById(context);
+    if (result.affectedRows === 0) {
+      const payload = {
+        msg: `No entry found with id: ${context.id}`,
+        content: { ...context },
+        data: result,
+      };
+      res.status(404).send(payload);
     } else {
-      res.status(404).end('Content not found.');
+      res.status(204).end();
     }
   } catch (e) {
     next(e);
   }
 };
 
-router
-  .route('/todos/:id([1-9]*)?')
-  .get(getTodos)
-  .post(addTodo)
-  .put(updateTodo)
-  .delete(deleteTodo);
-
-// // GET ALL
-// router.get('/', async (req, res) => {
-//   try {
-//     res.send(await database.findAll());
-//   } catch (err) {
-//     res.status(500).send(err);
-//   }
-// });
-
-// // POST
-// router.post('/', async (req, res) => {
-//   try {
-//     res.send(await database.save(req.body));
-//   } catch (err) {
-//     res.status(400).send(err);
-//   }
-// });
-
-// // DELETE
-// router.delete('/:urlId([1-9]*)', async (req, res) => {
-//   const urlId = Number(req.params.urlId);
-//   try {
-//     res.send(await database.deleteById(urlId));
-//   } catch (err) {
-//     res.status(404).json({ msg: `No todo with the id of ${urlId}` });
-//   }
-// });
-
-// // GET id
-// router.get('/:urlId([1-9]*)', async (req, res) => {
-//   const urlId = Number(req.params.urlId);
-//   try {
-//     res.send(await database.findById(urlId));
-//   } catch (err) {
-//     res.status(404).json({ msg: `No todo with the id of ${urlId}` });
-//   }
-// });
+router.route('/todos/:id([1-9]*)?').get(get).post(post).put(put).delete(del);
 
 module.exports = router;
