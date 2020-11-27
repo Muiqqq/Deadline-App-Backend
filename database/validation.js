@@ -6,8 +6,8 @@ const validator = new Validator();
 function validation(obj) {
   let validationErrors;
   const validation = obj.priority
-    ? validator.validate(obj, schemas.saveSchema)
-    : validator.validate(obj, schemas.nameSchema);
+    ? validator.validate(obj, schemas.todoSchema)
+    : validator.validate(obj, schemas.listSchema);
 
   if (validation.errors.length > 0) {
     validationErrors = validation.errors;

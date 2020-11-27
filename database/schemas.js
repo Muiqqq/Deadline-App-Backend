@@ -1,6 +1,6 @@
 const MainObject = {};
 
-MainObject.saveSchema = {
+MainObject.todoSchema = {
   id: '/All',
   type: 'object',
 
@@ -30,7 +30,7 @@ MainObject.saveSchema = {
   },
 };
 
-MainObject.nameSchema = {
+MainObject.listSchema = {
   type: 'object',
   properties: {
     name: {
