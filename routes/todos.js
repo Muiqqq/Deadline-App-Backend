@@ -45,7 +45,6 @@ const get = async (req, res, next) => {
       context.limit = +req.query.limit;
       context.sort = req.query.sort;
     }
-    console.log(context);
 
     const result = await todos.find(context);
 

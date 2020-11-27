@@ -42,11 +42,9 @@ const connectionFunctions = {
         if (!sortableColumns.includes(column)) {
           throw new Error('Invalid "sort" column');
         }
-
         if (order === undefined) {
           order = 'ASC';
         }
-
         sql = sql.concat(` ORDER BY ${column} ${order}`);
       }
       // Pagination
@@ -55,6 +53,7 @@ const connectionFunctions = {
       if (context.offset) {
         sql = sql.concat(' OFFSET ?');
       }
+
       placeholders = [...placeholders, limit, context.offset];
     }
 
