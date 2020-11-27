@@ -27,13 +27,16 @@ const connectionFunctions = {
   },
   // Add a new entry to db
   save: async (context) => {
-    // Implement validation!!
-    console.log(context);
-    const sql = 'INSERT INTO todos SET ?';
-    const placeholders = [context];
+    const validationResult = validate(context);
+    if (!validationResult > 0) {
+      const sql = 'INSERT INTO todos SET ?';
+      const placeholders = [context];
 
-    const result = await dbConnection.runQuery(sql, placeholders);
-    return result;
+      const result = await dbConnection.runQuery(sql, placeholders);
+      return result;
+    } else {
+      return validationResult[0];
+    }
   },
   // Delete todo by id
   deleteById: async (context) => {
