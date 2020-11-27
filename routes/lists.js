@@ -40,16 +40,21 @@ const post = async (req, res, next) => {
     const context = {};
     context.name = req.body.name;
     const result = await lists.save(context);
-    const payload = {
-      msg: result.insertId
-        ? 'Added to database successfully'
-        : 'Validation errors. Could not add to database.',
-      content: result.insertId
-        ? { id: result.insertId, ...context }
-        : { error: result.ValidationError, ...context },
-      data: result,
-    };
-    res.status(201).send(payload);
+    const payload = {};
+    let status;
+    if (result.insertId) {
+      payload.msg = 'Added to database successfully';
+      payload.content = { id: result.insertId, ...context };
+      payload.data = result;
+      status = 201;
+    } else {
+      payload.msg = 'Validation errors. Could not add to database.';
+      payload.content = { ...context };
+      payload.error = result;
+      status = 400;
+    }
+
+    res.status(status).send(payload);
   } catch (e) {
     next(e);
   }
