@@ -19,7 +19,23 @@ GET http://localhost:8080/api/todos/999
 GET http://localhost:8080/api/todos?limit=5&offset=3
 
 ###
+# filtering!
+# is_done (bool)
+GET http://localhost:8080/api/todos?is_done=true
 
+###
+# priority (number)
+GET http://localhost:8080/api/todos?priority=1
+
+###
+# listid (number)
+GET http://localhost:8080/api/todos?listid=2
+
+###
+# or a combination of the above
+GET http://localhost:8080/api/todos?listid=1&priority=1
+
+###
 # POST todos
 # date_created is automatically generated
 # listid has to point to an existing list!
