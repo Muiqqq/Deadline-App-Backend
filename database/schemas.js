@@ -36,7 +36,7 @@ MainObject.nameSchema = {
     name: {
       type: 'string',
       minLength: 1,
-      maxLength: 4,
+      maxLength: 40,
     },
   },
 };
