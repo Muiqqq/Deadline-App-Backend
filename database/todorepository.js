@@ -27,11 +27,9 @@ const connectionFunctions = {
         if (!sortableColumns.includes(column)) {
           throw new Error('Invalid "sort" column');
         }
-
         if (order === undefined) {
           order = 'ASC';
         }
-
         sql = sql.concat(` ORDER BY ${column} ${order}`);
       }
       const limit = context.limit > 0 ? context.limit : MAX_ROWS_SHOWN;
@@ -39,7 +37,7 @@ const connectionFunctions = {
       if (context.offset) {
         sql = sql.concat(' OFFSET ?');
       }
-      console.log(sql);
+
       placeholders = [limit, context.offset];
     }
 
