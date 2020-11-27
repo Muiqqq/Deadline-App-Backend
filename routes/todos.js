@@ -50,16 +50,16 @@ const get = async (req, res, next) => {
 // POST
 const post = async (req, res, next) => {
   try {
-    const todo = createTodoObjectFromRequest(req);
-    todo.date_created = new Date();
-    const result = await todos.save(todo);
+    const context = createTodoObjectFromRequest(req);
+    context.date_created = new Date();
+    const result = await todos.save(context);
     const payload = {
       msg: result.insertId
         ? 'Added to database successfully'
         : 'Validation errors. Could not add to database.',
       content: result.insertId
-        ? { id: result.insertId, ...todo }
-        : { error: result.ValidationError, ...todo },
+        ? { id: result.insertId, ...context }
+        : { error: result.ValidationError, ...context },
       data: result,
     };
     res.status(201).send(payload);
