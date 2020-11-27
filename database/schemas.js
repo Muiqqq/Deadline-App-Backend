@@ -7,8 +7,8 @@ MainObject.saveSchema = {
   properties: {
     name: {
       type: 'string',
-      minlength: 1,
-      maxlength: 400,
+      minLength: 1,
+      maxLength: 200,
     },
     description: {
       type: 'string',
@@ -27,9 +27,10 @@ MainObject.saveSchema = {
   },
 };
 
-MainObject.idSchema = {
-  type: 'number',
-  minimum: 1,
+MainObject.nameSchema = {
+  type: 'string',
+  minlength: 1,
+  maxlength: 3,
 };
 
 module.exports = MainObject;

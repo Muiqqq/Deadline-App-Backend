@@ -41,8 +41,12 @@ const post = async (req, res, next) => {
     context.name = req.body.name;
     const result = await lists.save(context);
     const payload = {
-      msg: 'Added to database successfully.',
-      content: { id: result.insertId, ...context },
+      msg: result.insertId
+        ? 'Added to database successfully'
+        : 'Validation errors. Could not add to database.',
+      content: result.insertId
+        ? { id: result.insertId, ...context }
+        : { error: result.ValidationError, ...context },
       data: result,
     };
     res.status(201).send(payload);
