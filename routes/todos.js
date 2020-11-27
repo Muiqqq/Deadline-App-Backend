@@ -41,10 +41,11 @@ const get = async (req, res, next) => {
       if (req.query.priority) {
         context.priority = req.query.priority;
       }
-
       context.offset = +req.query.offset;
       context.limit = +req.query.limit;
+      context.sort = req.query.sort;
     }
+    console.log(context);
 
     const result = await todos.find(context);
 

@@ -3,6 +3,15 @@ const validate = require('./validation');
 
 const MAX_ROWS_SHOWN = 80;
 
+const sortableColumns = [
+  'id',
+  'name',
+  'priority',
+  'listid',
+  'date_created',
+  'date_deadline',
+];
+
 const connectionFunctions = {
   // Find all or find one
   find: async (context) => {
@@ -28,13 +37,24 @@ const connectionFunctions = {
         placeholders.push(context.priority);
       }
 
+      if (context.sort) {
+        let [column, order] = context.sort.split(':');
+        if (!sortableColumns.includes(column)) {
+          throw new Error('Invalid "sort" column');
+        }
+
+        if (order === undefined) {
+          order = 'ASC';
+        }
+
+        sql = sql.concat(` ORDER BY ${column} ${order}`);
+      }
       // Pagination
       const limit = context.limit > 0 ? context.limit : MAX_ROWS_SHOWN;
       sql = sql.concat(' LIMIT ?');
       if (context.offset) {
         sql = sql.concat(' OFFSET ?');
       }
-
       placeholders = [...placeholders, limit, context.offset];
     }
 
