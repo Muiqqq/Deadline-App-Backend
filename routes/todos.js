@@ -3,16 +3,24 @@ const router = express.Router();
 const todos = require('../database/todorepository.js');
 
 const createTodoObjectFromRequest = (req) => {
-  const todo = {
-    date_created: req.body.date_created,
-    date_deadline: req.body.date_deadline,
-    name: req.body.name,
-    description: req.body.description,
-    is_done: false,
-    priority: +req.body.priority,
-    listid: +req.body.listid,
-  };
-
+  // This works a bit better, now the db can handle
+  // defaults properly.
+  const template = [
+    'date_created',
+    'date_deadline',
+    'name',
+    'description',
+    'is_done',
+    'priority',
+    'listid',
+  ];
+  const todo = {};
+  for (const element of template) {
+    if (element in req.body) {
+      todo[element] = req.body[element];
+    }
+  }
+  // console.log(todo);
   return todo;
 };
 
