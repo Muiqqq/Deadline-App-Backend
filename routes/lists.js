@@ -12,6 +12,7 @@ const get = async (req, res, next) => {
     } else {
       context.offset = +req.query.offset;
       context.limit = +req.query.limit;
+      context.sort = req.query.sort;
     }
 
     const result = await lists.find(context);

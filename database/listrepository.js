@@ -3,6 +3,8 @@ const validate = require('./validation');
 
 const MAX_ROWS_SHOWN = 80;
 
+const sortableColumns = ['id', 'name'];
+
 // Queries are actually handled in connection.js, this is where they are
 // constructed.
 const connectionFunctions = {
@@ -15,6 +17,16 @@ const connectionFunctions = {
       sql = sql.concat(' WHERE id = ?');
       placeholders = [context.id];
     } else {
+      if (context.sort) {
+        let [column, order] = context.sort.split(':');
+        if (!sortableColumns.includes(column)) {
+          throw new Error('Invalid "sort" column');
+        }
+        if (order === undefined) {
+          order = 'ASC';
+        }
+        sql = sql.concat(` ORDER BY ${column} ${order}`);
+      }
       const limit = context.limit > 0 ? context.limit : MAX_ROWS_SHOWN;
       sql = sql.concat(' LIMIT ?');
       if (context.offset) {
