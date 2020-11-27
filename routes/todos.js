@@ -3,16 +3,24 @@ const router = express.Router();
 const todos = require('../database/todorepository.js');
 
 const createTodoObjectFromRequest = (req) => {
-  const todo = {
-    date_created: req.body.date_created,
-    date_deadline: req.body.date_deadline,
-    name: req.body.name,
-    description: req.body.description,
-    is_done: false,
-    priority: +req.body.priority,
-    listid: +req.body.listid,
-  };
-
+  // This works a bit better, now the db can handle
+  // defaults properly.
+  const template = [
+    'date_created',
+    'date_deadline',
+    'name',
+    'description',
+    'is_done',
+    'priority',
+    'listid',
+  ];
+  const todo = {};
+  for (const element of template) {
+    if (element in req.body) {
+      todo[element] = req.body[element];
+    }
+  }
+  // console.log(todo);
   return todo;
 };
 
@@ -50,19 +58,23 @@ const get = async (req, res, next) => {
 // POST
 const post = async (req, res, next) => {
   try {
-    const todo = createTodoObjectFromRequest(req);
-    todo.date_created = new Date();
-    const result = await todos.save(todo);
-    const payload = {
-      msg: result.insertId
-        ? 'Added to database successfully'
-        : 'Validation errors. Could not add to database.',
-      content: result.insertId
-        ? { id: result.insertId, ...todo }
-        : { error: result.ValidationError, ...todo },
-      data: result,
-    };
-    res.status(201).send(payload);
+    const context = createTodoObjectFromRequest(req);
+    context.date_created = new Date();
+    const result = await todos.save(context);
+    const payload = {};
+    let status;
+    if (result.insertId) {
+      payload.msg = 'Added to database successfully';
+      payload.content = { id: result.insertId, ...context };
+      payload.data = result;
+      status = 201;
+    } else {
+      payload.msg = 'Validation errors. Could not add to database.';
+      payload.content = { ...context };
+      payload.error = result;
+      status = 400;
+    }
+    res.status(status).send(payload);
   } catch (e) {
     next(e);
   }

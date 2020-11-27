@@ -32,23 +32,21 @@ Content-Type: application/json
 {
   "date_deadline": "2020-11-20",
   "name": "This is a test task",
-  "description": "no description",
-  "priority": "1",
-  "is_done": "0",
-  "listid": "1"
+  "description": "description",
+  "priority": 1,
+  "is_done": false,
+  "listid": 1
 }
 
 ###
 # only required fields
-# todo: remove priority from here when fixed
 
 POST http://localhost:8080/api/todos
 Content-Type: application/json
 
 {
   "name": "This is another test task",
-  "priority": "1",
-  "listid": "2"
+  "listid": 2
 }
 
 ###
@@ -61,8 +59,8 @@ Content-Type: application/json
   "date_deadline": "2020-11-21",
   "name": null,
   "description": "description",
-  "priority": "2",
-  "listid": "1"
+  "priority": 2,
+  "listid": 1
 }
 
 ###
@@ -75,15 +73,13 @@ Content-Type: application/json
   "date_deadline": "2020-11-21",
   "name": "Doesn't work",
   "description": "description",
-  "priority": "2",
-  "listid": "100"
+  "priority": 2,
+  "listid": 100
 }
 
 ###
 
 # PUT todos
-# update an existing todo
-# all fields required!
 
 ###
 # here's a quick GET to see how it looks
@@ -91,33 +87,29 @@ Content-Type: application/json
 GET http://localhost:8080/api/todos/4
 
 ###
-
+# update an existing todo
 PUT http://localhost:8080/api/todos/4
 Content-Type: application/json
 
 {
   "date_created": "2020-11-25",
   "date_deadline": "2020-11-25",
-  "name": "Pest control",
+  "name": "Pest control yep",
   "description": "Nothing to see here :)",
-  "priority": "2",
-  "is_done": "1",
-  "listid": "2"
+  "priority": 3,
+  "is_done": true,
+  "listid": 2
 }
 
 ###
-# this one shouldn't work
+# no need to specify everything, only the changed
+# field(s)
 
 PUT http://localhost:8080/api/todos/4
 Content-Type: application/json
 
 {
-  "date_deadline": "2020-11-25",
-  "name": "Pest control",
-  "description": "Nothing to see here :)",
-  "priority": "2",
-  "is_done": "1",
-  "listid": "2"
+  "name": "Pest control"
 }
 
 ###
