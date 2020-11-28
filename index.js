@@ -1,10 +1,12 @@
 // const database = require('./database/crudrepository.js');
 const dbConnection = require('./database/connection');
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const todos = require('./routes/todos.js');
 const lists = require('./routes/lists');
 
+app.use(cors());
 app.use(express.json());
 app.use('/api', todos);
 app.use('/api', lists);
