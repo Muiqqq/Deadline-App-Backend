@@ -6,20 +6,36 @@ const MAX_ROWS_SHOWN = 80;
 const connectionFunctions = {
   // Find all or find one
   find: async (context) => {
-    let sql = 'SELECT * FROM todos';
+    let sql = 'SELECT * FROM todos WHERE 1 = 1';
     let placeholders = [];
 
     if (context.id > 0) {
-      sql = sql.concat(' WHERE id = ?');
+      sql = sql.concat(' AND id = ?');
       placeholders = [context.id];
     } else {
+      // Filtering
+      // There has to be a better way right?
+      if (context.listid) {
+        sql = sql.concat(' AND listid = ?');
+        placeholders.push(context.listid);
+      }
+      if (context.is_done) {
+        sql = sql.concat(' AND is_done = ?');
+        placeholders.push(context.is_done === 'true');
+      }
+      if (context.priority) {
+        sql = sql.concat(' AND priority = ?');
+        placeholders.push(context.priority);
+      }
+
+      // Pagination
       const limit = context.limit > 0 ? context.limit : MAX_ROWS_SHOWN;
       sql = sql.concat(' LIMIT ?');
       if (context.offset) {
         sql = sql.concat(' OFFSET ?');
       }
 
-      placeholders = [limit, context.offset];
+      placeholders = [...placeholders, limit, context.offset];
     }
 
     const result = await dbConnection.runQuery(sql, placeholders);

@@ -31,6 +31,17 @@ const get = async (req, res, next) => {
     if (req.params.id) {
       context.id = +req.params.id;
     } else {
+      // For filtering purposes
+      if (req.query.listid) {
+        context.listid = req.query.listid;
+      }
+      if (req.query.is_done) {
+        context.is_done = req.query.is_done;
+      }
+      if (req.query.priority) {
+        context.priority = req.query.priority;
+      }
+
       context.offset = +req.query.offset;
       context.limit = +req.query.limit;
     }
