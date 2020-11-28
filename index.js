@@ -6,12 +6,15 @@ const app = express();
 const todos = require('./routes/todos.js');
 const lists = require('./routes/lists');
 
-app.use(cors());
+const port = process.env.PORT || 8080;
+
+if (!process.env.PORT) {
+  app.use(cors());
+}
 app.use(express.json());
 app.use('/api', todos);
 app.use('/api', lists);
 
-const port = process.env.PORT || 8080;
 const server = app.listen(port, async () => {
   try {
     // PROBLEM: this doesn't really try connecting to db...
