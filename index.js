@@ -11,7 +11,8 @@ app.use(express.json());
 app.use('/api', todos);
 app.use('/api', lists);
 
-const server = app.listen(8080, async () => {
+const port = process.env.PORT || 8080;
+const server = app.listen(port, async () => {
   try {
     // PROBLEM: this doesn't really try connecting to db...
     // if db server not running its "successful" in connecting
