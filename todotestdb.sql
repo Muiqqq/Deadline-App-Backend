@@ -3,6 +3,13 @@ DELIMITER $$
 
 CREATE PROCEDURE CreateExampleTodoDB()
 BEGIN
+  
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    ROLLBACK;
+  END;
+
+  START TRANSACTION;
 
   DROP TABLE IF EXISTS todos;
   DROP TABLE IF EXISTS lists;
@@ -200,6 +207,8 @@ BEGIN
     description = 'Press the delete button.',
     listid = 3
   ;
+
+  COMMIT;
 
 END $$
 
