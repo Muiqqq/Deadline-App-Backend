@@ -36,6 +36,44 @@ GET http://localhost:8080/api/todos?listid=2
 GET http://localhost:8080/api/todos?listid=1&priority=1
 
 ###
+# Single column Sorting!
+# name (asc)
+GET http://localhost:8080/api/todos?sort=name:asc
+
+###
+# name (desc)
+GET http://localhost:8080/api/todos?sort=name:desc
+
+###
+# date (asc)
+GET http://localhost:8080/api/todos?sort=date_created:asc
+
+###
+# date (desc)
+GET http://localhost:8080/api/todos?sort=date_created:desc
+
+###
+# priority (asc)
+GET http://localhost:8080/api/todos?sort=priority:asc
+
+###
+# priority (desc)
+GET http://localhost:8080/api/todos?sort=priority:desc
+
+###
+# date_deadline (asc)
+GET http://localhost:8080/api/todos?sort=date_deadline:asc
+
+###
+# date_deadline (desc)
+GET http://localhost:8080/api/todos?sort=date_deadline:desc
+
+### Sorting failure
+# trying to sort a non existent column:
+GET http://localhost:8080/api/todos?sort=gojira:desc
+
+
+###
 # POST todos
 # date_created is automatically generated
 # listid has to point to an existing list!
