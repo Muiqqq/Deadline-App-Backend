@@ -37,6 +37,9 @@ const connectionFunctions = {
         placeholders.push(context.priority);
       }
 
+      // Sorting
+      // THIS NEEDS REFACTORING
+      // - Error management: push to placeholder rather than concat straight to sql
       if (context.sort) {
         let [column, order] = context.sort.split(':');
         if (!sortableColumns.includes(column)) {

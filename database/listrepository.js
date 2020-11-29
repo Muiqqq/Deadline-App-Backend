@@ -17,6 +17,9 @@ const connectionFunctions = {
       sql = sql.concat(' WHERE id = ?');
       placeholders = [context.id];
     } else {
+      // Sorting
+      // THIS NEEDS REFACTORING
+      // - Error management: push to placeholder rather than concat straight to sql
       if (context.sort) {
         let [column, order] = context.sort.split(':');
         if (!sortableColumns.includes(column)) {
