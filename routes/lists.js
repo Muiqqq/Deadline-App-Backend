@@ -28,6 +28,7 @@ const get = async (req, res, next) => {
       todoContext.listid = context.id;
       todoContext.offset = +req.query.offset;
       todoContext.limit = +req.query.limit;
+      todoContext.sort = req.query.sort;
       result = { list: {}, todos: [] };
       result.list = await lists.find(context);
       result.todos = await todos.find(todoContext);
