@@ -22,5 +22,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# DB config, confidential
-config.js
+# Local db config, confidential
+config_local.js

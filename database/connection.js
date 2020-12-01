@@ -1,19 +1,14 @@
 const mysql = require('mysql');
-const config = require('./config');
-
-config.connectionLimit = 10;
+const config = process.env.HOST
+  ? require('./config')
+  : require('./config_local');
 
 let connection = null;
 
 const dbConnectionFunctions = {
   connect: () => {
     // Create connection pool
-    connection = mysql.createPool({
-      host: config.HOST,
-      user: config.USER,
-      password: config.PASSWORD,
-      database: config.DATABASE,
-    });
+    connection = mysql.createPool(config);
     // For testing:
     connection.on('acquire', function (connection) {
       console.log('Connection %d acquired', connection.threadId);
