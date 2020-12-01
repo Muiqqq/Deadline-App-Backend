@@ -2,6 +2,7 @@ const mysql = require('mysql');
 const config = require('./config');
 
 config.connectionLimit = 10;
+config.dateStrings = true;
 
 let connection = null;
 
