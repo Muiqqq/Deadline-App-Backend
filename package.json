@@ -1,11 +1,17 @@
 {
-  "name": "src",
+  "name": "todo-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "eslint": "node node_modules/eslint/bin/eslint *.js",
+    "fix": "node node_modules/eslint/bin/eslint *.js --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IkuinenPadawan/Todo-Backend.git"
   },
   "author": "",
   "license": "ISC",
@@ -16,8 +22,19 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1"
   },
+  "homepage": "https://github.com/IkuinenPadawan/Todo-Backend#readme",
+  "devDependencies": {
+    "eslint": "^7.14.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1"
+  },
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "eslint-config-prettier": "^6.15.0",
+    "express": "^4.17.1",
+    "jsonschema": "^1.4.0",
+    "mysql": "^2.18.1"
   }
 }
