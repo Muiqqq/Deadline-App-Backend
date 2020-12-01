@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const lists = require('../database/listrepository');
+const todos = require('../database/todorepository');
 
 // GET
 const get = async (req, res, next) => {
@@ -15,9 +16,28 @@ const get = async (req, res, next) => {
       context.sort = req.query.sort;
     }
 
-    const result = await lists.find(context);
+    let result;
+    // /api/lists/1?q=todos
+    // Returns an object with both the list's info
+    // and all the todos that belong to that list.
+    // Todos could already be filtered by listid, but
+    // this way only one api request is needed to get
+    // both the list and the todos that point to it.
+    if (req.query.q === 'todos' && context.id) {
+      const todoContext = {};
+      todoContext.listid = context.id;
+      todoContext.offset = +req.query.offset;
+      todoContext.limit = +req.query.limit;
+      todoContext.sort = req.query.sort;
+      result = { list: {}, todos: [] };
+      result.list = await lists.find(context);
+      result.todos = await todos.find(todoContext);
+    } else {
+      result = await lists.find(context);
+    }
 
-    if (result.length > 0) {
+    const resultArray = req.query.q ? result.todos : result;
+    if (resultArray.length > 0) {
       res.status(200).send(result);
     } else {
       const payload = {
