@@ -1,5 +1,7 @@
 const mysql = require('mysql');
-const config = require('./config');
+const config = process.env.HOST
+  ? require('./config')
+  : require('./config_local');
 
 let connection = null;
 
