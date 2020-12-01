@@ -11,6 +11,7 @@ const port = process.env.PORT || 8080;
 if (!process.env.PORT) {
   app.use(cors());
 }
+app.use(express.static('frontend/build'));
 app.use(express.json());
 app.use('/api', todos);
 app.use('/api', lists);
