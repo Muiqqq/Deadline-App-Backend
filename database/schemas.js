@@ -18,7 +18,7 @@ MainObject.todoSchema = {
     priority: {
       type: 'number',
       required: true,
-      minimum: 1,
+      minimum: 0,
       maximum: 3,
     },
     listid: {
