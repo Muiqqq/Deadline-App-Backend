@@ -98,7 +98,7 @@ const put = async (req, res, next) => {
     const context = {};
     context.id = +req.params.id;
     context.todo = createTodoObjectFromRequest(req);
-    context.todo.date_created = new Date();
+    // context.todo.date_created = new Date();
     const result = await todos.update(context);
 
     const payload = {
