@@ -7,7 +7,7 @@ const todos = require('./routes/todos.js');
 const lists = require('./routes/lists');
 
 const baseURL = process.env.PORT
-  ? 'https://tamk-4a00ez62-3001-group11.herokuapp.com/'
+  ? 'https://tamk-4a00ez62-3001-group11.herokuapp.com/api/'
   : 'http://localhost:8080/api/';
 const port = process.env.PORT || 8080;
 
