@@ -8,7 +8,7 @@ const lists = require('./routes/lists');
 
 const baseURL = process.env.PORT
   ? 'https://tamk-4a00ez62-3001-group11.herokuapp.com/'
-  : 'http://localhost:8080/api';
+  : 'http://localhost:8080/api/';
 const port = process.env.PORT || 8080;
 
 if (!process.env.PORT) {
@@ -17,7 +17,7 @@ if (!process.env.PORT) {
 
 app.get('/api', (req, res, next) => {
   res.send(
-    `Resources: <br> <a href="${baseURL}/lists">/lists</a> <br> <a href="${baseURL}/todos">/todos</a>`
+    `Resources: <br> <a href="${baseURL}lists">/lists</a> <br> <a href="${baseURL}todos">/todos</a>`
   );
   next();
 });
