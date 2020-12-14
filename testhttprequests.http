@@ -1,76 +1,82 @@
+# If running this app locally, these requests can be used via VSCode's
+# REST Client to test the api.
+# Replace 'your_api_key_here' with your api key.
+# DO NOT USE QUOTATION MARKS!
+@apikey = your_api_key_here
+
 # GET todos
 # all
 
-GET http://localhost:8080/api/todos
+GET http://localhost:8080/api/todos?apikey={{apikey}}
 
 ###
 # one
 
-GET http://localhost:8080/api/todos/1
+GET http://localhost:8080/api/todos/1?apikey={{apikey}}
 
 ###
 # how about a non-existing one?
 
-GET http://localhost:8080/api/todos/999
+GET http://localhost:8080/api/todos/999?apikey={{apikey}}
 
 ###
 # pagination!
 
-GET http://localhost:8080/api/todos?limit=5&offset=3
+GET http://localhost:8080/api/todos?limit=5&offset=3&apikey={{apikey}}
 
 ###
 # filtering!
 # is_done (bool)
-GET http://localhost:8080/api/todos?is_done=true
+GET http://localhost:8080/api/todos?is_done=true&apikey={{apikey}}
 
 ###
 # priority (number)
-GET http://localhost:8080/api/todos?priority=1
+GET http://localhost:8080/api/todos?priority=1&apikey={{apikey}}
 
 ###
 # listid (number)
-GET http://localhost:8080/api/todos?listid=2
+GET http://localhost:8080/api/todos?listid=2&apikey={{apikey}}
 
 ###
 # or a combination of the above
-GET http://localhost:8080/api/todos?listid=1&priority=1
+GET http://localhost:8080/api/todos?listid=1&priority=1&apikey={{apikey}}
 
 ###
 # Single column Sorting!
 # name (asc)
-GET http://localhost:8080/api/todos?sort=name:asc
+GET http://localhost:8080/api/todos?sort=name:asc&apikey={{apikey}}
 
 ###
 # name (desc)
-GET http://localhost:8080/api/todos?sort=name:desc
+GET http://localhost:8080/api/todos?sort=name:desc&apikey={{apikey}}
 
 ###
 # date (asc)
-GET http://localhost:8080/api/todos?sort=date_created:asc
+GET http://localhost:8080/api/todos?sort=date_created:asc&apikey={{apikey}}
 
 ###
 # date (desc)
-GET http://localhost:8080/api/todos?sort=date_created:desc
+GET http://localhost:8080/api/todos?sort=date_created:desc&apikey={{apikey}}
 
 ###
 # priority (asc)
-GET http://localhost:8080/api/todos?sort=priority:asc
+GET http://localhost:8080/api/todos?sort=priority:asc&apikey={{apikey}}
 
 ###
 # priority (desc)
-GET http://localhost:8080/api/todos?sort=priority:desc
+GET http://localhost:8080/api/todos?sort=priority:desc&apikey={{apikey}}
 
 ###
 # date_deadline (asc)
-GET http://localhost:8080/api/todos?sort=date_deadline:asc
+GET http://localhost:8080/api/todos?sort=date_deadline:asc&apikey={{apikey}}
 
 ###
 # date_deadline (desc)
-GET http://localhost:8080/api/todos?sort=date_deadline:desc
+GET http://localhost:8080/api/todos?sort=date_deadline:desc&apikey={{apikey}}
 
 ### Sorting failure
 # trying to sort a non existent column:
-GET http://localhost:8080/api/todos?sort=gojira:desc
+GET http://localhost:8080/api/todos?sort=gojira:desc&apikey={{apikey}}
 
 
 ###
@@ -80,7 +86,7 @@ GET http://localhost:8080/api/todos?sort=gojira:desc
 
 # all fields
 
-POST http://localhost:8080/api/todos
+POST http://localhost:8080/api/todos?apikey={{apikey}}
 Content-Type: application/json
 
 {
@@ -95,7 +101,7 @@ Content-Type: application/json
 ###
 # only required fields
 
-POST http://localhost:8080/api/todos
+POST http://localhost:8080/api/todos?apikey={{apikey}}
 Content-Type: application/json
 
 {
@@ -106,7 +112,7 @@ Content-Type: application/json
 ###
 # one that fails
 
-POST http://localhost:8080/api/todos
+POST http://localhost:8080/api/todos?apikey={{apikey}}
 Content-Type: application/json
 
 {
@@ -120,7 +126,7 @@ Content-Type: application/json
 ###
 # another one just because
 
-POST http://localhost:8080/api/todos
+POST http://localhost:8080/api/todos?apikey={{apikey}}
 Content-Type: application/json
 
 {
@@ -138,11 +144,11 @@ Content-Type: application/json
 ###
 # here's a quick GET to see how it looks
 # before update
-GET http://localhost:8080/api/todos/4
+GET http://localhost:8080/api/todos/4?apikey={{apikey}}
 
 ###
 # update an existing todo
-PUT http://localhost:8080/api/todos/4
+PUT http://localhost:8080/api/todos/4?apikey={{apikey}}
 Content-Type: application/json
 
 {
@@ -159,7 +165,7 @@ Content-Type: application/json
 # no need to specify everything, only the changed
 # field(s)
 
-PUT http://localhost:8080/api/todos/4
+PUT http://localhost:8080/api/todos/4?apikey={{apikey}}
 Content-Type: application/json
 
 {
@@ -171,12 +177,12 @@ Content-Type: application/json
 # DELETE todos
 # by id
 
-DELETE http://localhost:8080/api/todos/1
+DELETE http://localhost:8080/api/todos/1?apikey={{apikey}}
 
 ###
 # can't delete everything though
 
-DELETE http://localhost:8080/api/todos
+DELETE http://localhost:8080/api/todos?apikey={{apikey}}
 
 ###
 
@@ -185,17 +191,17 @@ DELETE http://localhost:8080/api/todos
 # GET lists
 # all
 
-GET http://localhost:8080/api/lists
+GET http://localhost:8080/api/lists?apikey={{apikey}}
 
 ###
 # one
 
-GET http://localhost:8080/api/lists/1
+GET http://localhost:8080/api/lists/1?apikey={{apikey}}
 
 ###
 # POST lists
 
-POST http://localhost:8080/api/lists/
+POST http://localhost:8080/api/lists?apikey={{apikey}}
 Content-Type: application/json
 
 {
@@ -206,7 +212,7 @@ Content-Type: application/json
 # PUT lists
 # update an existing list
 
-PUT http://localhost:8080/api/lists/1
+PUT http://localhost:8080/api/lists/1?apikey={{apikey}}
 Content-Type: application/json
 
 {
@@ -217,11 +223,11 @@ Content-Type: application/json
 # DELETE lists
 # by id
 
-DELETE http://localhost:8080/api/lists/1
+DELETE http://localhost:8080/api/lists/1?apikey={{apikey}}
 
 ###
 # can't delete everything
 
-DELETE http://localhost:8080/api/lists
+DELETE http://localhost:8080/api/lists?apikey={{apikey}}
 
 ###
