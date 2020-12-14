@@ -9,7 +9,7 @@ if (!process.env.APIKEY) {
 }
 
 const apikey = process.env.APIKEY;
-const invalidApiKeyMsg = 'Please provide valid apikey.';
+const invalidApiKeyMsg = 'Please provide valid api key.';
 
 const createTodoObjectFromRequest = (req) => {
   // This works a bit better, now the db can handle

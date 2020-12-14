@@ -10,7 +10,7 @@ if (!process.env.APIKEY) {
 }
 
 const apikey = process.env.APIKEY;
-const invalidApiKeyMsg = 'Please provide valid apikey.';
+const invalidApiKeyMsg = 'Please provide valid api key.';
 
 // GET
 const get = async (req, res, next) => {
