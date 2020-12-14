@@ -2,6 +2,12 @@ const express = require('express');
 const router = express.Router();
 const todos = require('../database/todorepository.js');
 
+// Get apikey from a local .env file if not running
+// through heroku
+if (!process.env.APIKEY) {
+  require('dotenv').config();
+}
+
 const apikey = process.env.APIKEY;
 const invalidApiKeyMsg = 'Please provide valid apikey.';
 
