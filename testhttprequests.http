@@ -17,6 +17,10 @@
 GET {{url}}/todos?apikey={{apikey}}
 
 ###
+# all under a specific list
+GET {{url}}/lists/1?q=todos&apikey={{apikey}}
+
+###
 # one
 
 GET {{url}}/todos/1?apikey={{apikey}}
